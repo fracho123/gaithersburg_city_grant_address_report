@@ -571,11 +571,7 @@ Public Sub testSort()
     wbook.Worksheets.[_Default](1).UsedRange.Copy
     DiscardsSheet.Range("A1").PasteSpecial xlPasteValues
     
-    With CreateObject("htmlfile")
-        With .parentWindow.clipboardData
-            .setData "text", vbNullString
-        End With
-    End With
+    setClipboardToBlankLine
     
     wbook.Close
     

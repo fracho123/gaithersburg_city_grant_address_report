@@ -143,5 +143,3 @@ To print this documentation, click [here](README.md) and print that page.
 
 # Software setup
 This project uses Excel with the Rubberduck VBA plugin for running tests and linting. See the Rubberduck installation instructions [here](https://github.com/rubberduck-vba/Rubberduck/wiki/Installing)
-
-.NET Framework 3.5 and 4.0 must be enabled, see instructions [here](https://stackoverflow.com/a/56430192/13342792).

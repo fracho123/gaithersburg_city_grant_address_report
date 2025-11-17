@@ -264,6 +264,7 @@ Public Sub TestAllAddresses()
     AutocorrectAddressesSheet.Range("D6").value = "Ste 102"
     AutocorrectAddressesSheet.Range("D2").value = "Unit 102"
     AutocorrectAddressesSheet.Range("D3").value = "Unit 102"
+    AutocorrectAddressesSheet.Range("C8").value = "422 Girard St"
     AutocorrectAddressesSheet.Range("D8").value = "Apt 103"
     AutocorrectAddressesSheet.Range("D9").value = "Ste 100"
     AutocorrectAddressesSheet.Range("D11").value = "Apt 1"

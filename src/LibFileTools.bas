@@ -1883,19 +1883,6 @@ End Function
 'Returns a special folder domain on Mac based on the corresponding enum value
 '*******************************************************************************
 #If Mac Then
-Public Function GetSpecialFolderDomain(ByVal sfd As SpecialFolderDomain) As String
-    Static sfds([_minSFD] To [_maxSFD]) As String
-    '
-    If sfd < [_minSFD] Or sfd > [_maxSFD] Then Exit Function
-    If LenB(sfds([_maxSFD])) = 0 Then
-        sfds(sfd_System) = "system"
-        sfds(sfd_Local) = "local"
-        sfds(sfd_Network) = "network"
-        sfds(sfd_User) = "user"
-        sfds(sfd_Classic) = "classic"
-    End If
-    GetSpecialFolderDomain = sfds(sfd)
-End Function
 #End If
 
 '*******************************************************************************

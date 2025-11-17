@@ -43,7 +43,7 @@ Public Sub TestDecemberPrintRequests()
     ' Can only use Fakes.Date once per test
     Fakes.Date.Returns "12/1/2024"
     Autocorrect.printRemainingRequests 8
-    Assert.isTrue SheetUtilities.getAutocorrectRequestCharacters.text = "8 / 8000 left until January"
+    Assert.isTrue SheetUtilities.getAutocorrectRequestCharacters.text = "8 / 5000 left until January"
     Fakes.Date.Verify.AtLeastOnce
     
     MacroExit AutocorrectAddressesSheet

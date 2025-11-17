@@ -580,7 +580,7 @@ End Function
 
 ' Converts date string to quarter
 Public Function getQuarterStr(ByVal dateStr As String) As String
-    Select Case Month(dateStr)
+    Select Case month(dateStr)
         Case 7 To 9
             getQuarterStr = "Q1"
         Case 10 To 12

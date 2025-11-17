@@ -271,7 +271,7 @@ Private Sub incrementCountyTotal(ByVal record As RecordTuple)
         For Each quarter In record.visitData.Item(service).Keys
             Dim visit As Variant
             For Each visit In record.visitData.Item(service).Item(quarter)
-                monthNum = Month(visit)
+                monthNum = month(visit)
                 guestIDTotal(monthNum) = guestIDTotal(monthNum) + 1
                 householdTotal(monthNum) = householdTotal(monthNum) + record.householdTotal
                 childrenTotal(monthNum) = childrenTotal(monthNum) + record.zeroToOneTotal + _

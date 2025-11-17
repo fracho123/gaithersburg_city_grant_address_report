@@ -25,20 +25,20 @@ Public Property Get guestNames() As Variant()
     guestNames = records.Keys
 End Property
 
-Public Property Get exists(ByVal name As String) As Boolean
-    exists = records.exists(name)
+Public Property Get exists(ByVal Name As String) As Boolean
+    exists = records.exists(Name)
 End Property
 
-Public Property Get guestRecord(ByVal name As String) As RxRecord
-    Set guestRecord = records.Item(name)
+Public Property Get guestRecord(ByVal Name As String) As RxRecord
+    Set guestRecord = records.Item(Name)
 End Property
 
-Public Property Let guestRecord(ByVal name As String, ByVal record As RxRecord)
-    If exists(name) Then
+Public Property Let guestRecord(ByVal Name As String, ByVal record As RxRecord)
+    If exists(Name) Then
         'Rubberduck bug
         '@Ignore ValueRequired
-        records.Item(name) = record
+        records.Item(Name) = record
     Else
-        records.Add name, record
+        records.Add Name, record
     End If
 End Property

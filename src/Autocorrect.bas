@@ -39,16 +39,16 @@ Public Sub attemptValidation()
     addressAPIKey = getAPIKeys().Item(addressValidationKeyname)
     
     Dim addresses As Scripting.Dictionary
-    Set addresses = records.loadAddresses(AddressesSheet.name)
+    Set addresses = records.loadAddresses(AddressesSheet.Name)
     
     Dim autocorrected As Scripting.Dictionary
-    Set autocorrected = records.loadAddresses(AutocorrectedAddressesSheet.name)
+    Set autocorrected = records.loadAddresses(AutocorrectedAddressesSheet.Name)
     
     Dim addressesToAutocorrect As Scripting.Dictionary
-    Set addressesToAutocorrect = records.loadAddresses(AutocorrectAddressesSheet.name)
+    Set addressesToAutocorrect = records.loadAddresses(AutocorrectAddressesSheet.Name)
     
     Dim discards As Scripting.Dictionary
-    Set discards = records.loadAddresses(DiscardsSheet.name)
+    Set discards = records.loadAddresses(DiscardsSheet.Name)
     
     If getRemainingRequests() < (UBound(addressesToAutocorrect.Keys) + 1) Then
         MsgBox "Insufficient requests remaining to autocorrect all addresses, " & _

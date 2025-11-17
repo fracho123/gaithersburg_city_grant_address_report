@@ -12,7 +12,7 @@ Public Function MacroEntry(ByVal wsheetToReturn As Worksheet) As Boolean
         Set wsheet = ThisWorkbook.Sheets.[_Default](i)
         
         If wsheet.FilterMode = True Then
-            MsgBox "Disable filter on " & wsheet.name & " and try again"
+            MsgBox "Disable filter on " & wsheet.Name & " and try again"
             MacroEntry = False
             Exit Function
         End If
@@ -39,12 +39,12 @@ Public Sub MacroExit(ByVal wsheetToReturn As Worksheet)
         wsheet.Unprotect
         wsheet.AutoFilterMode = False
         
-        Select Case wsheet.name
-            Case NonRxReportSheet.name, RxReportSheet.name
+        Select Case wsheet.Name
+            Case NonRxReportSheet.Name, RxReportSheet.Name
                 wsheet.UsedRange.Offset(1, 0).AutoFilter
             ' Rubberduck bug
             '@Ignore UnreachableCase
-            Case AddressesSheet.name, AutocorrectAddressesSheet.name, AutocorrectedAddressesSheet.name, DiscardsSheet.name
+            Case AddressesSheet.Name, AutocorrectAddressesSheet.Name, AutocorrectedAddressesSheet.Name, DiscardsSheet.Name
                 wsheet.UsedRange.AutoFilter
         End Select
         
@@ -105,7 +105,7 @@ Private Sub PasteRecords(ByVal sheet As Worksheet)
     sheet.Activate
     Application.ScreenUpdating = False
     
-    getBlankRow(sheet.name).Cells.Item(1, 1).PasteSpecial Paste:=xlPasteValues
+    getBlankRow(sheet.Name).Cells.Item(1, 1).PasteSpecial Paste:=xlPasteValues
     
     sheet.Cells.Item(1, 1).Select
     Application.ScreenUpdating = True
@@ -133,10 +133,10 @@ Public Sub confirmPasteRxRecordsCalculate()
     If Not MacroEntry(RxSheet) Then Exit Sub
     
     Dim addresses As Scripting.Dictionary
-    Set addresses = records.loadAddresses(AddressesSheet.name)
+    Set addresses = records.loadAddresses(AddressesSheet.Name)
     
     Dim discards As Scripting.Dictionary
-    Set discards = records.loadAddresses(DiscardsSheet.name)
+    Set discards = records.loadAddresses(DiscardsSheet.Name)
     
     Set addresses = MergeDicts(addresses, discards)
     
@@ -228,14 +228,14 @@ Public Sub confirmDeleteAllVisitData()
     SheetUtilities.getCountyRng.value = 0
     SheetUtilities.getNonRxReportRng.Clear
     SheetUtilities.getRxReportRng.Clear
-    SheetUtilities.getAddressVisitDataRng(AddressesSheet.name).Clear
-    SheetUtilities.getRng(AddressesSheet.name, "A2", "A2").Offset(0, SheetUtilities.firstServiceColumn - 2).value = "{}"
-    SheetUtilities.getAddressVisitDataRng(AutocorrectAddressesSheet.name).Clear
-    SheetUtilities.getRng(AutocorrectAddressesSheet.name, "A2", "A2").Offset(0, SheetUtilities.firstServiceColumn - 2).value = "{}"
-    SheetUtilities.getAddressVisitDataRng(DiscardsSheet.name).Clear
-    SheetUtilities.getRng(DiscardsSheet.name, "A2", "A2").Offset(0, SheetUtilities.firstServiceColumn - 2).value = "{}"
-    SheetUtilities.getAddressVisitDataRng(AutocorrectedAddressesSheet.name).Clear
-    SheetUtilities.getRng(AutocorrectedAddressesSheet.name, "A2", "A2").Offset(0, SheetUtilities.firstServiceColumn - 2).value = "{}"
+    SheetUtilities.getAddressVisitDataRng(AddressesSheet.Name).Clear
+    SheetUtilities.getRng(AddressesSheet.Name, "A2", "A2").Offset(0, SheetUtilities.firstServiceColumn - 2).value = "{}"
+    SheetUtilities.getAddressVisitDataRng(AutocorrectAddressesSheet.Name).Clear
+    SheetUtilities.getRng(AutocorrectAddressesSheet.Name, "A2", "A2").Offset(0, SheetUtilities.firstServiceColumn - 2).value = "{}"
+    SheetUtilities.getAddressVisitDataRng(DiscardsSheet.Name).Clear
+    SheetUtilities.getRng(DiscardsSheet.Name, "A2", "A2").Offset(0, SheetUtilities.firstServiceColumn - 2).value = "{}"
+    SheetUtilities.getAddressVisitDataRng(AutocorrectedAddressesSheet.Name).Clear
+    SheetUtilities.getRng(AutocorrectedAddressesSheet.Name, "A2", "A2").Offset(0, SheetUtilities.firstServiceColumn - 2).value = "{}"
 
     MacroExit ThisWorkbook.ActiveSheet
 End Sub
@@ -319,15 +319,15 @@ Public Sub confirmDiscardAll()
     If Not MacroEntry(ThisWorkbook.ActiveSheet) Then Exit Sub
     
     Dim Autocorrect As Scripting.Dictionary
-    Set Autocorrect = records.loadAddresses(AutocorrectAddressesSheet.name)
+    Set Autocorrect = records.loadAddresses(AutocorrectAddressesSheet.Name)
     
     Dim key As Variant
     For Each key In Autocorrect.Keys()
-        records.writeAddress DiscardsSheet.name, Autocorrect.Item(key)
+        records.writeAddress DiscardsSheet.Name, Autocorrect.Item(key)
     Next key
     
-    SheetUtilities.ClearSheet AutocorrectAddressesSheet.name
-    SheetUtilities.SortSheet DiscardsSheet.name
+    SheetUtilities.ClearSheet AutocorrectAddressesSheet.Name
+    SheetUtilities.SortSheet DiscardsSheet.Name
     
     MacroExit ThisWorkbook.ActiveSheet
 End Sub
@@ -384,7 +384,7 @@ Private Sub moveSelectedRows(ByVal sourceSheet As String, ByVal destSheet As Str
     Dim movedRecord As Variant
     For Each movedRecord In movedRecords
         Dim foundCell As Range
-        Set foundCell = findRow(AutocorrectedAddressesSheet.name, movedRecord.key)
+        Set foundCell = findRow(AutocorrectedAddressesSheet.Name, movedRecord.key)
         If Not foundCell Is Nothing Then
             foundCell.EntireRow.Delete
         End If
@@ -395,7 +395,7 @@ End Sub
 Public Sub confirmDiscardSelected()
     If Not MacroEntry(ThisWorkbook.ActiveSheet) Then Exit Sub
     
-    moveSelectedRows AutocorrectAddressesSheet.name, DiscardsSheet.name, False
+    moveSelectedRows AutocorrectAddressesSheet.Name, DiscardsSheet.Name, False
     
     MacroExit ThisWorkbook.ActiveSheet
 End Sub
@@ -404,7 +404,7 @@ End Sub
 Public Sub confirmRestoreSelectedDiscard()
     If Not MacroEntry(ThisWorkbook.ActiveSheet) Then Exit Sub
     
-    moveSelectedRows DiscardsSheet.name, AutocorrectAddressesSheet.name, True
+    moveSelectedRows DiscardsSheet.Name, AutocorrectAddressesSheet.Name, True
     
     MacroExit ThisWorkbook.ActiveSheet
 End Sub
@@ -413,7 +413,7 @@ End Sub
 Public Sub confirmMoveAutocorrect()
     If Not MacroEntry(ThisWorkbook.ActiveSheet) Then Exit Sub
     
-    moveSelectedRows AddressesSheet.name, AutocorrectAddressesSheet.name, True
+    moveSelectedRows AddressesSheet.Name, AutocorrectAddressesSheet.Name, True
     SheetUtilities.getRxReportRng.Clear
     SheetUtilities.getNonRxReportRng.Clear
     records.computeInterfaceTotals
@@ -460,7 +460,7 @@ Public Sub toggleUserVerifiedAutocorrected()
         key = currentRowRng.Cells.Item(1, SheetUtilities.keyColumn)
         
         Dim foundCell As Range
-        Set foundCell = findRow(AddressesSheet.name, key)
+        Set foundCell = findRow(AddressesSheet.Name, key)
         
         If Not foundCell Is Nothing Then
             AddressesSheet.rows.Item(foundCell.row).Cells.Item(1, 2) = _
@@ -497,16 +497,16 @@ Public Sub ImportRecords()
     SheetUtilities.ClearAll
     
     ' Copy all sheets except for Interface and Final Report
-    wbook.Worksheets.[_Default](AddressesSheet.name).UsedRange.Copy
+    wbook.Worksheets.[_Default](AddressesSheet.Name).UsedRange.Copy
     AddressesSheet.Range("A1").PasteSpecial xlPasteValues
     
-    wbook.Worksheets.[_Default](AutocorrectAddressesSheet.name).UsedRange.Copy
+    wbook.Worksheets.[_Default](AutocorrectAddressesSheet.Name).UsedRange.Copy
     AutocorrectAddressesSheet.Range("A1").PasteSpecial xlPasteValues
     
-    wbook.Worksheets.[_Default](DiscardsSheet.name).UsedRange.Copy
+    wbook.Worksheets.[_Default](DiscardsSheet.Name).UsedRange.Copy
     DiscardsSheet.Range("A1").PasteSpecial xlPasteValues
     
-    wbook.Worksheets.[_Default](AutocorrectedAddressesSheet.name).UsedRange.Copy
+    wbook.Worksheets.[_Default](AutocorrectedAddressesSheet.Name).UsedRange.Copy
     AutocorrectedAddressesSheet.Range("A1").PasteSpecial xlPasteValues
     
     setClipboardToBlankLine

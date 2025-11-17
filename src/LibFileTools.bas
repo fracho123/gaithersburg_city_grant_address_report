@@ -56,6 +56,7 @@ Attribute VB_Name = "LibFileTools"
 ''    - GetKnownFolderCLSID      (Windows only)
 ''    - GetKnownFolderPath       (Windows only)
 ''    - GetLocalPath
+''    - GetMainBusinessURLs
 ''    - GetRelativePath
 ''    - GetRemotePath
 ''    - GetSpecialFolderConstant (Mac only)
@@ -81,9 +82,6 @@ Option Private Module
         Private Declare PtrSafe Function iconv_open Lib "/usr/lib/libiconv.dylib" (ByVal toCode As LongPtr, ByVal fromCode As LongPtr) As LongPtr
         Private Declare PtrSafe Function iconv_close Lib "/usr/lib/libiconv.dylib" (ByVal cd As LongPtr) As Long
     #Else
-        Private Declare Function iconv Lib "/usr/lib/libiconv.dylib" (ByVal cd As Long, ByRef inBuf As Long, ByRef inBytesLeft As Long, ByRef outBuf As Long, ByRef outBytesLeft As Long) As Long
-        Private Declare Function iconv_open Lib "/usr/lib/libiconv.dylib" (ByVal toCode As Long, ByVal fromCode As Long) As Long
-        Private Declare Function iconv_close Lib "/usr/lib/libiconv.dylib" (ByVal cd As Long) As Long
     #End If
 #Else
     #If VBA7 Then
@@ -94,7 +92,7 @@ Option Private Module
         Private Declare PtrSafe Function RemoveDirectoryW Lib "kernel32" (ByVal lpPathName As LongPtr) As Long
         Private Declare PtrSafe Function GetFileSecurity Lib "advapi32.dll" Alias "GetFileSecurityA" (ByVal lpFileName As String, ByVal RequestedInformation As Long, pSecurityDescriptor As Byte, ByVal nLength As Long, lpnLengthNeeded As Long) As Long
         Private Declare PtrSafe Function GetSecurityDescriptorOwner Lib "advapi32.dll" (pSecurityDescriptor As Byte, pOwner As LongPtr, lpbOwnerDefaulted As LongPtr) As Long
-        Private Declare PtrSafe Function LookupAccountSid Lib "advapi32.dll" Alias "LookupAccountSidA" (ByVal lpSystemName As String, ByVal Sid As LongPtr, ByVal name As String, cbName As Long, ByVal ReferencedDomainName As String, cbReferencedDomainName As Long, peUse As LongPtr) As Long
+        Private Declare PtrSafe Function LookupAccountSid Lib "advapi32.dll" Alias "LookupAccountSidA" (ByVal lpSystemName As String, ByVal Sid As LongPtr, ByVal Name As String, cbName As Long, ByVal ReferencedDomainName As String, cbReferencedDomainName As Long, peUse As LongPtr) As Long
         Private Declare PtrSafe Function MultiByteToWideChar Lib "kernel32" (ByVal codePage As Long, ByVal dwFlags As Long, ByVal lpMultiByteStr As LongPtr, ByVal cbMultiByte As Long, ByVal lpWideCharStr As LongPtr, ByVal cchWideChar As Long) As Long
         Private Declare PtrSafe Function WideCharToMultiByte Lib "kernel32" (ByVal codePage As Long, ByVal dwFlags As Long, ByVal lpWideCharStr As LongPtr, ByVal cchWideChar As Long, ByVal lpMultiByteStr As LongPtr, ByVal cbMultiByte As Long, ByVal lpDefaultChar As LongPtr, ByVal lpUsedDefaultChar As LongPtr) As Long
         Private Declare PtrSafe Function SHGetKnownFolderPath Lib "shell32" (ByRef rfID As GUID, ByVal dwFlags As Long, ByVal hToken As Long, ByRef pszPath As LongPtr) As Long
@@ -103,28 +101,10 @@ Option Private Module
         Private Declare PtrSafe Sub CoTaskMemFree Lib "ole32" (ByVal hMem As LongPtr)
         Private Declare PtrSafe Sub CopyMemory Lib "kernel32" Alias "RtlMoveMemory" (ByVal Destination As LongPtr, ByVal Source As LongPtr, ByVal Length As LongPtr)
     #Else
-        Private Declare Function CommDlgExtendedError Lib "comdlg32.dll" () As Long
-        Private Declare Function GetOpenFileNameW Lib "comdlg32.dll" (pOpenfilename As OPENFILENAME) As Long
-        Private Declare Function CopyFileW Lib "kernel32" (ByVal lpExistingFileName As Long, ByVal lpNewFileName As Long, ByVal bFailIfExists As Long) As Long
-        Private Declare Function DeleteFileW Lib "kernel32" (ByVal lpFileName As Long) As Long
-        Private Declare Function RemoveDirectoryW Lib "kernel32" (ByVal lpPathName As Long) As Long
-        Private Declare Function GetFileSecurity Lib "advapi32.dll" Alias "GetFileSecurityA" (ByVal lpFileName As String, ByVal RequestedInformation As Long, pSecurityDescriptor As Byte, ByVal nLength As Long, lpnLengthNeeded As Long) As Long
-        Private Declare Function GetSecurityDescriptorOwner Lib "advapi32.dll" (pSecurityDescriptor As Byte, pOwner As Long, lpbOwnerDefaulted As Long) As Long
-        Private Declare Function LookupAccountSid Lib "advapi32.dll" Alias "LookupAccountSidA" (ByVal lpSystemName As String, ByVal Sid As Long, ByVal Name As String, cbName As Long, ByVal ReferencedDomainName As String, cbReferencedDomainName As Long, peUse As Long) As Long
-        Private Declare Function MultiByteToWideChar Lib "kernel32" (ByVal codePage As Long, ByVal dwFlags As Long, ByVal lpMultiByteStr As Long, ByVal cchMultiByte As Long, ByVal lpWideCharStr As Long, ByVal cchWideChar As Long) As Long
-        Private Declare Function WideCharToMultiByte Lib "kernel32" (ByVal codePage As Long, ByVal dwFlags As Long, ByVal lpWideCharStr As Long, ByVal cchWideChar As Long, ByVal lpMultiByteStr As Long, ByVal cchMultiByte As Long, ByVal lpDefaultChar As Long, ByVal lpUsedDefaultChar As Long) As Long
-        Private Declare Function SHGetKnownFolderPath Lib "shell32" (rfID As Any, ByVal dwFlags As Long, ByVal hToken As Long, ppszPath As Long) As Long
-        Private Declare Function CLSIDFromString Lib "ole32" (ByVal lpszGuid As Long, pGuid As Any) As Long
-        Private Declare Function lstrlenW Lib "kernel32" (ByVal lpString As Long) As Long
-        Private Declare Sub CoTaskMemFree Lib "ole32" (ByVal pv As Long)
-        Private Declare Sub CopyMemory Lib "kernel32" Alias "RtlMoveMemory" (ByVal Destination As Long, ByVal Source As Long, ByVal Length As Long)
     #End If
 #End If
 
 #If VBA7 = 0 Then
-    Private Enum LongPtr
-        [_]
-    End Enum
 #End If
 
 Public Enum PageCode
@@ -402,11 +382,15 @@ Private Type ONEDRIVE_PROVIDER
     accountIndex As Long
     baseMount As String
     syncID As String
+    #If Mac Then
+        syncDir As String
+    #End If
 End Type
 Private Type ONEDRIVE_PROVIDERS
     arr() As ONEDRIVE_PROVIDER
     pCount As Long
     isSet As Boolean
+    lastCacheUpdate As Date
 End Type
 
 Private Type ONEDRIVE_ACCOUNT_INFO
@@ -554,7 +538,7 @@ Private Function BrowseFilesAPI(ByRef initialPath As String _
         .lpstrFilter = StrPtr(buffFilter)
         '
         .nMaxFile = &H100000
-        buffFiles = VBA.Space$(.nMaxFile)
+        buffFiles = Space$(.nMaxFile)
         .lpstrFile = StrPtr(buffFiles)
         .lpstrInitialDir = StrPtr(initialPath)
         .lpstrTitle = StrPtr(dialogTitle)
@@ -609,7 +593,7 @@ Private Function BrowseFilesAPI(ByRef initialPath As String _
                     For i = 2 To 0 Step -1
                         .nMaxFile = .nMaxFile * &H100& + b(i)
                     Next i
-                    buffFiles = VBA.Space$(.nMaxFile)
+                    buffFiles = Space$(.nMaxFile)
                     .lpstrFile = StrPtr(buffFiles)
                 End With
                 MsgBox "Did not expect so many files. Please select again!" _
@@ -631,8 +615,8 @@ Public Function BrowseForFolder(Optional ByRef initialPath As String _
     'If user has not accesss [initialPath] previously, will be prompted by
     'Mac OS to Grant permission to directory
     If LenB(initialPath) > 0 Then
-        If Not Right(initialPath, 1) = Application.PathSeparator Then
-            initialPath = initialPath & Application.PathSeparator
+        If Not Right(initialPath, 1) = PATH_SEPARATOR Then
+            initialPath = initialPath & PATH_SEPARATOR
         End If
         Dir initialPath, Attributes:=vbDirectory
     End If
@@ -652,13 +636,15 @@ Public Function BrowseForFolder(Optional ByRef initialPath As String _
     '
     With Application.FileDialog(dialogTypeFolderPicker)
         If LenB(dialogTitle) > 0 Then .Title = dialogTitle
-        If LenB(initialPath) > 0 Then .InitialFileName = initialPath
+        If LenB(initialPath) > 0 Then .InitialFileName = BuildPath(initialPath, PATH_SEPARATOR)
         If LenB(.InitialFileName) = 0 Then
             Dim app As Object: Set app = Application 'Needs to be late-binded
-            Select Case Application.name
+            Select Case app.Name
                 Case "Microsoft Excel": .InitialFileName = GetLocalPath(app.ThisWorkbook.path, , True)
                 Case "Microsoft Word":  .InitialFileName = GetLocalPath(app.ThisDocument.path, , True)
             End Select
+        Else
+            .InitialFileName = BuildPath(.InitialFileName, PATH_SEPARATOR)
         End If
         If .Show = actionButton Then
             .InitialFileName = .SelectedItems.Item(1)
@@ -1008,21 +994,6 @@ End Function
 '   does not fail because of forbidden characters, reserved names or other rules
 '*******************************************************************************
 #If Mac Then
-Public Function FixFileName(ByRef nameToFix As String) As String
-    Dim resultName As String
-    Dim i As Long: i = 1
-    '
-    resultName = Replace(nameToFix, ":", vbNullString)
-    resultName = Replace(resultName, "/", vbNullString)
-    '
-    'Names cannot start with a space character
-    Do While Mid$(resultName, i, 1) = "."
-        i = i + 1
-    Loop
-    If i > 1 Then resultName = Mid$(resultName, i)
-    '
-    FixFileName = resultName
-End Function
 #Else
 Public Function FixFileName(ByRef nameToFix As String _
                           , Optional ByVal isFATFileSystem As Boolean = False) As String
@@ -1320,7 +1291,7 @@ Private Sub AddFilesTo(ByVal collTarget As Collection _
             If Not fsoFolder Is Nothing Then
                 With fsoFolder
                     For Each fsoFile In .Files
-                        collTemp.Add fsoFile.name
+                        collTemp.Add fsoFile.Name
                     Next fsoFile
                 End With
             End If
@@ -1708,7 +1679,7 @@ Private Sub AddFoldersTo(ByVal collTarget As Collection _
             If Not fsoFolder Is Nothing Then
                 On Error Resume Next
                 For Each fsoDir In fsoFolder.SubFolders
-                    collFolders.Add fixedPath & fsoDir.name
+                    collFolders.Add fixedPath & fsoDir.Name
                 Next fsoDir
                 On Error GoTo 0
             End If
@@ -1796,6 +1767,7 @@ Public Function GetRelativePath(ByRef fullPath As String _
     Do
         prevPos = currPos
         currPos = InStr(currPos + 1, fPath, ps)
+        If currPos <> InStr(prevPos + 1, rPath, ps) Then Exit Do
         diff = currPos - prevPos - 1
         If diff > 0 Then
             fParent = Mid$(fPath, prevPos + 1, diff)
@@ -1959,7 +1931,7 @@ Public Function GetSpecialFolderPath(ByVal sfc As SpecialFolderConstant _
     '
     On Error Resume Next
     Dim app As Object:        Set app = Application
-    Dim inExcel As Boolean:   inExcel = (app.name = "Microsoft Excel")
+    Dim inExcel As Boolean:   inExcel = (app.Name = "Microsoft Excel")
     Dim appVersion As Double: appVersion = val(app.Version)
     On Error GoTo 0
     '
@@ -2145,7 +2117,7 @@ Private Function GetOneDriveLocalPath(ByVal odWebPath As String _
     Dim mainIndex As Long
     Dim i As Long
     '
-    If rebuildCache Or Not m_providers.isSet Then ReadODProviders
+    ReadODProviders rebuildCache
     For i = 1 To m_providers.pCount
         If StrCompLeft(odWebPath, m_providers.arr(i).webPath, vbTextCompare) = 0 Then
             collMatches.Add i
@@ -2231,7 +2203,7 @@ Private Function GetOneDriveWebPath(ByRef odLocalPath As String _
     Dim i As Long
     Dim fixedPath As String: fixedPath = FixPathSeparators(odLocalPath)
     '
-    If rebuildCache Or Not m_providers.isSet Then ReadODProviders
+    ReadODProviders rebuildCache
     For i = 1 To m_providers.pCount
         localPath = m_providers.arr(i).mountPoint
         If StrCompLeft(fixedPath, localPath, vbTextCompare) = 0 Then
@@ -2255,9 +2227,30 @@ End Function
 'Populates the OneDrive providers in the 'm_providers' structure
 'Utility for 'GetOneDriveLocalPath' and 'GetOneDriveWebPath'
 '*******************************************************************************
-Private Sub ReadODProviders()
+Private Sub ReadODProviders(ByVal rebuildCache As Boolean)
     Dim i As Long
     Dim accountsInfo As ONEDRIVE_ACCOUNTS_INFO
+    Dim fileName As String
+    Static collTrackedFiles As Collection
+    Const oneSecond As Date = 1 / 86400
+    '
+    If Not rebuildCache And m_providers.isSet Then
+        If m_providers.lastCacheUpdate + oneSecond > Now() Then Exit Sub
+        Dim v As Variant
+        On Error Resume Next
+        For Each v In collTrackedFiles
+            If FileDateTime(v) > m_providers.lastCacheUpdate _
+            Or Err.Number <> 0 Then
+                rebuildCache = True
+                Exit For
+            End If
+        Next v
+        On Error GoTo 0
+        If Not rebuildCache Then
+            m_providers.lastCacheUpdate = Now()
+            Exit Sub
+        End If
+    End If
     '
     m_providers.pCount = 0
     m_providers.isSet = False
@@ -2267,7 +2260,6 @@ Private Sub ReadODProviders()
     '
     #If Mac Then 'Grant access to all needed files/folders, in batch
         Dim collFiles As New Collection
-        Dim fileName As String
         '
         For i = 1 To accountsInfo.pCount
             With accountsInfo.arr(i)
@@ -2334,26 +2326,46 @@ Private Sub ReadODProviders()
             ValidateAccounts accountsInfo.arr(i), accountsInfo.arr(j)
         Next j
     Next i
+    Set collTrackedFiles = New Collection
     For i = 1 To accountsInfo.pCount
-        If accountsInfo.arr(i).isValid Then
-            If accountsInfo.arr(i).isPersonal Then
-                AddPersonalProviders accountsInfo.arr(i)
-            Else
-                AddBusinessProviders accountsInfo.arr(i)
+        With accountsInfo.arr(i)
+            If .isValid Then
+                If .isPersonal Then
+                    AddPersonalProviders accountsInfo.arr(i)
+                    collTrackedFiles.Add .groupPath
+                Else
+                    AddBusinessProviders accountsInfo.arr(i)
+                    fileName = Dir(Replace(.clientPath, ".ini", "_*.ini"))
+                    Do While LenB(fileName) > 0
+                        collTrackedFiles.Add .folderPath & "/" & fileName
+                        fileName = Dir
+                    Loop
+                End If
+                If .hasDatFile Then
+                    collTrackedFiles.Add .datPath
+                Else
+                    collTrackedFiles.Add .dbPath
+                End If
+                collTrackedFiles.Add .clientPath
+                collTrackedFiles.Add .globalPath
+                collTrackedFiles.Add .iniPath
             End If
-        End If
+        End With
     Next i
     #If Mac Then
         If collSyncIDToDir.count > 0 Then 'Replace sandbox paths
             For i = 1 To m_providers.pCount
                 With m_providers.arr(i)
-                    Dim syncDir As String: syncDir = collSyncIDToDir(.syncID)
-                    .mountPoint = Replace(.mountPoint, .baseMount, syncDir)
+                    On Error Resume Next
+                    .syncDir = collSyncIDToDir(.syncID)
+                    .mountPoint = Replace(.mountPoint, .baseMount, .syncDir)
+                    On Error GoTo 0
                 End With
             Next i
         End If
     #End If
     m_providers.isSet = True
+    m_providers.lastCacheUpdate = Now()
 #If Mac Then
     ClearConversionDescriptors
 #End If
@@ -2549,7 +2561,6 @@ Private Sub AddBusinessProviders(ByRef aInfo As ONEDRIVE_ACCOUNT_INFO)
     Dim bytes() As Byte:   ReadBytes aInfo.iniPath, bytes
     Dim iniText As String: iniText = bytes
     Dim lineText As Variant
-    Dim temp() As String
     Dim tempMount As String
     Dim mainMount As String
     Dim syncID As String
@@ -2567,6 +2578,7 @@ Private Sub AddBusinessProviders(ByRef aInfo As ONEDRIVE_ACCOUNT_INFO)
     Dim collSortedLines As New Collection
     Dim i As Long, j As Long
     Dim targetCount As Long
+    Dim tempNamespace As String
     '
     #If Mac Then
         iniText = ConvertText(iniText, codeUTF16LE, codeUTF8, True)
@@ -2598,29 +2610,31 @@ Private Sub AddBusinessProviders(ByRef aInfo As ONEDRIVE_ACCOUNT_INFO)
     Next tempColl
     On Error GoTo 0
     For Each lineText In collSortedLines
-        Dim parts() As String: parts = Split(lineText, """")
-        Select Case Left$(lineText, InStr(1, lineText, " "))
-        Case "libraryScope "
-            tempMount = parts(9)
-            syncID = Split(parts(10), " ")(2)
+        Dim parts() As String: parts = SplitIniLine(lineText)
+        Select Case parts(0)
+        Case "libraryScope"
+            tempMount = parts(14)
+            syncID = parts(16)
             canAdd = (LenB(tempMount) > 0)
-            If Split(lineText, " ", 4, vbBinaryCompare)(2) = "0" Then
+            If parts(2) = "0" Then
                 mainMount = tempMount
                 mainSyncID = syncID
                 tempURL = GetUrlNamespace(aInfo.clientPath)
             Else
-                temp = Split(parts(8), " ")
-                cSignature = "_" & temp(3) & temp(1)
+                cSignature = "_" & parts(12) & parts(10)
                 tempURL = GetUrlNamespace(aInfo.clientPath, cSignature)
+                If LenB(tempURL) = 0 Then
+                    cSignature = "_" & parts(12) & "_" & parts(10)
+                    tempURL = GetUrlNamespace(aInfo.clientPath, cSignature)
+                End If
             End If
-            cPending.Add tempURL, Split(parts(0), " ")(2)
-        Case "libraryFolder "
+            cPending.Add tempURL, parts(2)
+        Case "libraryFolder"
             If oDirs.dirCount = 0 Then ReadODDirs aInfo, oDirs
-            tempMount = parts(1)
-            temp = Split(parts(0), " ")
-            tempURL = cPending(temp(3))
-            syncID = Split(parts(4), " ")(1)
-            Dim tempID As String:     tempID = temp(4)
+            tempMount = parts(6)
+            tempURL = cPending(parts(3))
+            syncID = parts(9)
+            Dim tempID As String:     tempID = parts(4)
             Dim tempFolder As String: tempFolder = vbNullString
             If aInfo.hasDatFile Then tempID = Split(tempID, "+")(0)
             On Error Resume Next
@@ -2635,10 +2649,10 @@ Private Sub AddBusinessProviders(ByRef aInfo As ONEDRIVE_ACCOUNT_INFO)
             On Error GoTo 0
             canAdd = (LenB(tempFolder) > 0)
             tempURL = tempURL & tempFolder
-        Case "AddedScope "
+        Case "AddedScope"
             If LenB(mainMount) = 0 Then Err.Raise vbErrInvalidFormatInResourceFile
             If oDirs.dirCount = 0 Then ReadODDirs aInfo, oDirs
-            tempID = Split(parts(0), " ")(3)
+            tempID = parts(3)
             tempFolder = vbNullString
             On Error Resume Next
             Do
@@ -2652,15 +2666,19 @@ Private Sub AddBusinessProviders(ByRef aInfo As ONEDRIVE_ACCOUNT_INFO)
             On Error GoTo 0
             tempMount = mainMount & PATH_SEPARATOR & tempFolder
             syncID = mainSyncID
-            tempURL = parts(5)
+            tempURL = parts(11)
             If tempURL = " " Or LenB(tempURL) = 0 Then
                 tempURL = vbNullString
             Else
                 tempURL = tempURL & "/"
             End If
-            temp = Split(parts(4), " ")
-            cSignature = "_" & temp(3) & temp(1) & temp(4)
-            tempURL = GetUrlNamespace(aInfo.clientPath, cSignature) & tempURL
+            cSignature = "_" & parts(9) & parts(7) & parts(10)
+            tempNamespace = GetUrlNamespace(aInfo.clientPath, cSignature)
+            If LenB(tempNamespace) = 0 Then
+                cSignature = "_" & parts(9) & "_" & parts(7) & "_" & parts(10)
+                tempNamespace = GetUrlNamespace(aInfo.clientPath, cSignature)
+            End If
+            tempURL = tempNamespace & tempURL
             canAdd = True
         Case Else
             Exit For
@@ -2682,6 +2700,42 @@ Private Sub AddBusinessProviders(ByRef aInfo As ONEDRIVE_ACCOUNT_INFO)
         End If
     Next lineText
 End Sub
+
+'*******************************************************************************
+'Splits a cid.ini file into space delimited parts
+'*******************************************************************************
+Private Function SplitIniLine(ByVal lineText As String) As String()
+    Dim i As Long
+    Dim j As Long
+    Dim k As Long
+    Dim res() As String: ReDim res(0 To 20)
+    Dim v As Variant
+    Dim s As String
+    Dim c As Long: c = Len(lineText)
+    '
+    i = InStr(1, lineText, " ")
+    res(0) = Left$(lineText, i - 1)
+    Do
+        Do
+            i = i + 1
+            s = Mid$(lineText, i, 1)
+        Loop Until s <> " "
+        If i > c Then Exit Do
+        If s = """" Then
+            i = i + 1
+            j = InStr(i, lineText, """")
+        Else
+            j = InStr(i + 1, lineText, " ")
+        End If
+        If j = 0 Then j = c + 1
+        k = k + 1
+        If k > UBound(res) Then ReDim Preserve res(0 To k)
+        res(k) = Mid$(lineText, i, j - i)
+        i = j
+    Loop Until j > c
+    ReDim Preserve res(0 To k)
+    SplitIniLine = res
+End Function
 
 '*******************************************************************************
 'Returns the URLNamespace from a provider's ClientPolicy*.ini file
@@ -2756,13 +2810,13 @@ Private Sub AddPersonalProviders(ByRef aInfo As ONEDRIVE_ACCOUNT_INFO)
     mainURL = GetUrlNamespace(aInfo.clientPath) & "/"
     libText = GetTagValue(aInfo.iniPath, "library = ")
     If LenB(libText) > 0 Then
-        libParts = Split(libText, """")
-        mainMount = libParts(3)
-        syncID = Split(libParts(4), " ")(2)
+        libParts = SplitIniLine(libText)
+        mainMount = libParts(7)
+        syncID = libParts(9)
     Else
         libText = GetTagValue(aInfo.iniPath, "libraryScope = ")
-        libParts = Split(libText, """")
-        mainMount = libParts(9)
+        libParts = SplitIniLine(libText)
+        mainMount = libParts(12)
         syncID = libParts(7)
     End If
     '
@@ -2926,7 +2980,9 @@ Private Sub ReadDirsFromDat(ByRef filePath As String, ByRef outdirs As DirsInfo)
         Loop Until lastRecord > size
         If outdirs.dirCount > 0 Then Exit For
     Next stepSize
-    ReDim Preserve outdirs.arrDirs(1 To outdirs.dirCount)
+    If outdirs.dirCount > 0 Then
+        ReDim Preserve outdirs.arrDirs(1 To outdirs.dirCount)
+    End If
 CloseFile:
     Close #fileNumber
 End Sub
@@ -3046,6 +3102,7 @@ Private Sub ReadDirsFromDB(ByRef filePath As String _
                 nameSize = (b(j - 1) - &H80) * &H40 + nameSize
                 j = j - 1
             End If
+            If j < 5 Then GoTo NextSig
             If (nameSize < 1) Or (b(j - 4) = 0) Then GoTo NextSig
             '
             If isPersonal Then
@@ -3148,7 +3205,9 @@ NextSig:
             lastRecord = lastRecord + i
         End If
     Loop Until lastRecord > size
-    ReDim Preserve outdirs.arrDirs(1 To outdirs.dirCount)
+    If outdirs.dirCount > 0 Then
+        ReDim Preserve outdirs.arrDirs(1 To outdirs.dirCount)
+    End If
 CloseFile:
     Close #fileNumber
 End Sub
@@ -3421,7 +3480,7 @@ Private Sub CreateODDiagnosticsFile()
     res = res & String$(80, "-")
     res = res & vbTwoNewLines
     '
-    ReadODProviders
+    ReadODProviders True
     res = res & "Providers found: " & m_providers.pCount & vbTwoNewLines
     For i = 1 To m_providers.pCount
         With m_providers.arr(i)
@@ -3431,6 +3490,9 @@ Private Sub CreateODDiagnosticsFile()
             res = res & "Mount Point: " & .mountPoint & vbNewLine
             res = res & "Sync ID: " & .syncID & vbNewLine
             res = res & "Web Path: " & .webPath & vbNewLine
+            #If Mac Then
+                res = res & "Sync Dir: " & .syncDir & vbNewLine
+            #End If
         End With
         res = res & vbNewLine
     Next i
@@ -3441,3 +3503,20 @@ Private Sub CreateODDiagnosticsFile()
     '
     MsgBox "Created [" & fileName & "] diagnostics file", vbInformation
 End Sub
+
+'*******************************************************************************
+'Returns a colection of web paths for the main provider of each business account
+'*******************************************************************************
+Public Function GetMainBusinessURLs() As Collection
+    Dim i As Long
+    Dim res As New Collection
+    '
+    ReadODProviders False
+    For i = 1 To m_providers.pCount
+        If m_providers.arr(i).isBusiness And m_providers.arr(i).isMain Then
+            res.Add m_providers.arr(i).webPath
+        End If
+    Next i
+    Set GetMainBusinessURLs = res
+End Function
+

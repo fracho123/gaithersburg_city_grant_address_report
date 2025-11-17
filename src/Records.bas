@@ -81,7 +81,7 @@ Public Function loadRecordFromSheet(ByVal recordRowFirstCell As Range) As Record
     Set record = New RecordTuple
     
     Dim services() As String
-    services = loadServiceNames(recordRowFirstCell.Worksheet.name)
+    services = loadServiceNames(recordRowFirstCell.Worksheet.Name)
     
     record.SetInCity recordRowFirstCell.Offset(0, 0).value
     record.UserVerified = CBool(recordRowFirstCell.Offset(0, 1).value)
@@ -505,7 +505,7 @@ Public Function computeRxTotals(ByVal addresses As Scripting.Dictionary) As Comp
     
     Dim i As Long
     i = SheetUtilities.getPastedRxRecordsRng.row
-    Do While i < getBlankRow(RxSheet.name).row
+    Do While i < getBlankRow(RxSheet.Name).row
         Dim guestID As String
         guestID = RxSheet.Cells.Item(i, 2).value
         
@@ -525,26 +525,26 @@ Public Function computeRxTotals(ByVal addresses As Scripting.Dictionary) As Comp
         
         Dim j As Long
         For j = 1 To 6
-            Dim name As String
+            Dim Name As String
             Dim prevName As String
             Dim medication As String
             medication = RxSheet.Cells.Item(i, 1 + (3 * j)).value
             If medication = vbNullString Then GoTo NextName
             
-            name = RxSheet.Cells.Item(i, 3 * j).value
-            If (name = vbNullString) Then
+            Name = RxSheet.Cells.Item(i, 3 * j).value
+            If (Name = vbNullString) Then
                 If (prevName <> vbNullString) Then
                     ' Assume previous name
-                    name = prevName
+                    Name = prevName
                 Else
                     ' Assume address name if medication with no name
-                    name = addressRecord.cleanName
+                    Name = addressRecord.cleanName
                 End If
             End If
             
             hasRx = True
             
-            name = CleanString(name)
+            Name = CleanString(Name)
             
             ' Replace - ; : with space
             ' Get proper cased first word
@@ -554,17 +554,17 @@ Public Function computeRxTotals(ByVal addresses As Scripting.Dictionary) As Comp
             medication = LWordTrim(medication)(0)
             medication = StrConv(medication, vbProperCase)
             
-            If rxReportRecords.exists(name) Then
-                rxReportRecords.guestRecord(name).quarter(quarter) = True
-                If Not rxReportRecords.guestRecord(name).medications.exists(medication) Then
+            If rxReportRecords.exists(Name) Then
+                rxReportRecords.guestRecord(Name).quarter(quarter) = True
+                If Not rxReportRecords.guestRecord(Name).medications.exists(medication) Then
                     totals.numUndupRxInGburgServed(quarter) = totals.numUndupRxInGburgServed(quarter) + 1
                     totals.numUndupRxInProgramServed(quarter) = totals.numUndupRxInProgramServed(quarter) + 1
-                    rxReportRecords.guestRecord(name).medications.Item(medication) = 1
+                    rxReportRecords.guestRecord(Name).medications.Item(medication) = 1
                 End If
-            ElseIf notInCityRecords.exists(name) Then
-                If Not notInCityRecords.guestRecord(name).medications.exists(medication) Then
+            ElseIf notInCityRecords.exists(Name) Then
+                If Not notInCityRecords.guestRecord(Name).medications.exists(medication) Then
                     totals.numUndupRxInProgramServed(quarter) = totals.numUndupRxInProgramServed(quarter) + 1
-                    notInCityRecords.guestRecord(name).medications.Item(medication) = 1
+                    notInCityRecords.guestRecord(Name).medications.Item(medication) = 1
                 End If
             Else
                 Dim newRecord As RxRecord
@@ -580,14 +580,14 @@ Public Function computeRxTotals(ByVal addresses As Scripting.Dictionary) As Comp
                     
                     'Rubberduck bug
                     '@Ignore ValueRequired, ObjectVariableNotSet
-                    rxReportRecords.guestRecord(name) = newRecord
+                    rxReportRecords.guestRecord(Name) = newRecord
                 Else
                     '@Ignore ValueRequired, ObjectVariableNotSet
-                    notInCityRecords.guestRecord(name) = newRecord
+                    notInCityRecords.guestRecord(Name) = newRecord
                 End If
             End If
             
-            prevName = name
+            prevName = Name
 NextName:
         Next j
         
@@ -627,9 +627,9 @@ End Function
 Public Sub computeCountyTotals()
     getCountyRng.value = 0
     
-    loadAddressComputeCountyTotal AddressesSheet.name
-    loadAddressComputeCountyTotal AutocorrectAddressesSheet.name
-    loadAddressComputeCountyTotal DiscardsSheet.name
+    loadAddressComputeCountyTotal AddressesSheet.Name
+    loadAddressComputeCountyTotal AutocorrectAddressesSheet.Name
+    loadAddressComputeCountyTotal DiscardsSheet.Name
 End Sub
 
 Private Function getServiceType(ByVal service As Variant) As TotalServiceType
@@ -644,7 +644,7 @@ Public Sub computeInterfaceTotals()
     SheetUtilities.ClearInterfaceTotals
     
     Dim addresses As Scripting.Dictionary
-    Set addresses = records.loadAddresses(AddressesSheet.name)
+    Set addresses = records.loadAddresses(AddressesSheet.Name)
     
     ' First key determines total service type, second key determines total type
     Dim totals As Scripting.Dictionary
@@ -836,10 +836,10 @@ Public Sub writeAddressesComputeInterfaceTotals(ByVal addresses As Scripting.Dic
     
     SheetUtilities.ClearAllPreserveDate
     
-    writeAddresses AddressesSheet.name, addresses
-    writeAddresses AutocorrectAddressesSheet.name, needsAutocorrect
-    writeAddresses DiscardsSheet.name, discards
-    writeAddresses AutocorrectedAddressesSheet.name, autocorrected
+    writeAddresses AddressesSheet.Name, addresses
+    writeAddresses AutocorrectAddressesSheet.Name, needsAutocorrect
+    writeAddresses DiscardsSheet.Name, discards
+    writeAddresses AutocorrectedAddressesSheet.Name, autocorrected
     
     SortAll
     
@@ -855,23 +855,23 @@ Public Sub addRecords()
     Application.StatusBar = "Loading addresses"
         
     Dim addresses As Scripting.Dictionary
-    Set addresses = loadAddresses(AddressesSheet.name)
+    Set addresses = loadAddresses(AddressesSheet.Name)
     
     Dim needsAutocorrect As Scripting.Dictionary
-    Set needsAutocorrect = loadAddresses(AutocorrectAddressesSheet.name)
+    Set needsAutocorrect = loadAddresses(AutocorrectAddressesSheet.Name)
     
     Dim discards As Scripting.Dictionary
-    Set discards = loadAddresses(DiscardsSheet.name)
+    Set discards = loadAddresses(DiscardsSheet.Name)
     
     Dim autocorrected As Scripting.Dictionary
-    Set autocorrected = loadAddresses(AutocorrectedAddressesSheet.name)
+    Set autocorrected = loadAddresses(AutocorrectedAddressesSheet.Name)
        
     Dim recordsToValidate As Scripting.Dictionary
     Set recordsToValidate = New Scripting.Dictionary
     
     Dim i As Long
     i = getPastedInterfaceRecordsRng.row
-    Do While i < getBlankRow(InterfaceSheet.name).row
+    Do While i < getBlankRow(InterfaceSheet.Name).row
         Dim recordToAdd As RecordTuple
         Set recordToAdd = loadRecordFromRaw(InterfaceSheet.Range("A" & i))
         
@@ -927,7 +927,7 @@ Public Sub addRecords()
             End If
         End If
         
-        Application.StatusBar = "Adding record " & (i - 8) & " of " & (getBlankRow(InterfaceSheet.name).row - 8)
+        Application.StatusBar = "Adding record " & (i - 8) & " of " & (getBlankRow(InterfaceSheet.Name).row - 8)
         ' yield execution so Excel remains responsive and user can hit Esc
         DoEvents
         i = i + 1

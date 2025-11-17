@@ -1111,7 +1111,7 @@ End Function
 
 Private Function utc_DateToSystemTime(utc_Value As Date) As utc_SYSTEMTIME
     utc_DateToSystemTime.utc_wYear = VBA.Year(utc_Value)
-    utc_DateToSystemTime.utc_wMonth = VBA.month(utc_Value)
+    utc_DateToSystemTime.utc_wMonth = VBA.Month(utc_Value)
     utc_DateToSystemTime.utc_wDay = VBA.Day(utc_Value)
     utc_DateToSystemTime.utc_wHour = VBA.Hour(utc_Value)
     utc_DateToSystemTime.utc_wMinute = VBA.Minute(utc_Value)

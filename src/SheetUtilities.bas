@@ -133,6 +133,11 @@ Public Function uniqueCountyZipCols() As Scripting.Dictionary
     Set uniqueCountyZipCols = cols
 End Function
 
+Public Sub setClipboardToBlankLine()
+    ' copy a blank cell, other methods don't work, see issue #7
+    InterfaceSheet.Cells.Item(4, 1).Copy
+End Sub
+
 Public Function getVersionNum() As String
     getVersionNum = InterfaceSheet.Cells.Item(1, 1).value
 End Function
@@ -647,3 +652,4 @@ Public Sub TestSetupCleanup()
     Autocorrect.printRemainingRequests 8000
     MacroExit InterfaceSheet
 End Sub
+

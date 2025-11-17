@@ -509,11 +509,7 @@ Public Sub ImportRecords()
     wbook.Worksheets.[_Default](AutocorrectedAddressesSheet.name).UsedRange.Copy
     AutocorrectedAddressesSheet.Range("A1").PasteSpecial xlPasteValues
     
-    With CreateObject("htmlfile")
-        With .parentWindow.clipboardData
-            .setData "text", vbNullString
-        End With
-    End With
+    setClipboardToBlankLine
     
     records.computeInterfaceTotals
     records.computeCountyTotals

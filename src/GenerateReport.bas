@@ -26,6 +26,37 @@ Private Sub writeNonRxReportRecord(ByVal record As RecordTuple)
     If Quarters(2) Then row.Cells.Item(1, 14) = "x"
     If Quarters(3) Then row.Cells.Item(1, 15) = "x"
     If Quarters(4) Then row.Cells.Item(1, 16) = "x"
+    
+    ' --- New: monthly flags (Jan..Dec) ---
+    Dim Months(1 To 12) As Boolean
+    Dim svc As Variant
+    Dim q As Variant
+    Dim v As Variant
+    Dim d As Date
+    Dim m As Long
+    
+    ' Walk all services, quarters, and visit dates
+    For Each svc In record.visitData.Keys
+        For Each q In record.visitData.Item(svc).Keys
+            For Each v In record.visitData.Item(svc).Item(q)
+                If Not IsEmpty(v) And v <> vbNullString Then
+                    d = CDate(v)
+                    m = Month(d)
+                    If m >= 1 And m <= 12 Then
+                        Months(m) = True
+                    End If
+                End If
+            Next v
+        Next q
+    Next svc
+    
+    Const FIRST_MONTH_COL As Long = 17
+    
+    For m = 1 To 12
+        If Months(m) Then
+            row.Cells.Item(1, FIRST_MONTH_COL + (m - 1)) = "x"
+        End If
+    Next m
 End Sub
 
 Public Sub generateNonRxReport()

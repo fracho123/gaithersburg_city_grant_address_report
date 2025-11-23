@@ -229,7 +229,7 @@ Public Function getRxDiscardedIDsRng() As Range
 End Function
 
 Public Function getNonRxReportRng() As Range
-    Set getNonRxReportRng = getRng(NonRxReportSheet.Name, "A3", "P3")
+    Set getNonRxReportRng = getRng(NonRxReportSheet.Name, "A3", "AB3")
 End Function
 
 Public Function getRxReportRng() As Range
@@ -580,7 +580,7 @@ End Function
 
 ' Converts date string to quarter
 Public Function getQuarterStr(ByVal dateStr As String) As String
-    Select Case month(dateStr)
+    Select Case Month(dateStr)
         Case 7 To 9
             getQuarterStr = "Q1"
         Case 10 To 12

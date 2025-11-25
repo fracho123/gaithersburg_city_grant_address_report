@@ -228,8 +228,10 @@ Public Function getRxDiscardedIDsRng() As Range
     Set getRxDiscardedIDsRng = RxSheet.Range("I8")
 End Function
 
-Public Function getNonRxReportRng() As Range
-    Set getNonRxReportRng = getRng(NonRxReportSheet.Name, "A3", "AB3")
+Public Function getNonRxReportRng(Optional withMonths As Boolean = False) As Range
+    Dim endColumn As String
+    If (withMonths) Then endColumn = "AB3" Else endColumn = "P3"
+    Set getNonRxReportRng = getRng(NonRxReportSheet.Name, "A3", endColumn)
 End Function
 
 Public Function getRxReportRng() As Range

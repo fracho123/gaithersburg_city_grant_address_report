@@ -76,6 +76,24 @@ Public Sub PasteRxTestRecordsCalculate(ByVal csvPath As String)
 End Sub
 
 '@TestMethod
+Public Sub TestMonthNonRxReport()
+    On Error GoTo TestFail
+    Fakes.MsgBox.Returns vbYes
+    
+    MacroEntry InterfaceSheet
+    PasteInterfaceTestRecords ThisWorkbook.path & "\testdata\testNonRxMonth.csv"
+    
+    InterfaceButtons.confirmAddRecords
+    InterfaceButtons.confirmGenerateNonRxReport
+
+    CompareSheetCSV Assert, NonRxReportSheet.Name, ThisWorkbook.path & "\testdata\testNonRxMonth_nonrxfinalreportoutput.csv", SheetUtilities.getNonRxReportRng(True)
+    
+    Exit Sub
+TestFail:
+    Assert.Fail "Test raised an error: #" & Err.Number & " - " & Err.Description
+End Sub
+
+'@TestMethod
 Public Sub TestMultiDeliveryTypeCount() ' Issue #4
     On Error GoTo TestFail
     

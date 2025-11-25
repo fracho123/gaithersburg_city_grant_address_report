@@ -228,7 +228,7 @@ Public Function getRxDiscardedIDsRng() As Range
     Set getRxDiscardedIDsRng = RxSheet.Range("I8")
 End Function
 
-Public Function getNonRxReportRng(Optional withMonths As Boolean = False) As Range
+Public Function getNonRxReportRng(Optional ByVal withMonths As Boolean = False) As Range
     Dim endColumn As String
     If (withMonths) Then endColumn = "AB3" Else endColumn = "P3"
     Set getNonRxReportRng = getRng(NonRxReportSheet.Name, "A3", endColumn)
@@ -353,7 +353,7 @@ Public Function sheetToCSVArray(ByVal sheetName As String, Optional ByVal rng As
     Application.DisplayAlerts = True
     
     sheetToCSVArray = getCSV(MyFileName)
-    Kill (MyFileName)
+'    Kill (MyFileName)
 End Function
 
 Public Sub CompareSheetCSV(ByVal Assert As Object, ByVal sheetName As String, ByVal csvPath As String, Optional ByVal rng As Range)
@@ -654,4 +654,5 @@ Public Sub TestSetupCleanup()
     Autocorrect.printRemainingRequests 8000
     MacroExit InterfaceSheet
 End Sub
+
 

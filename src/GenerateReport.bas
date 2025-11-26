@@ -60,7 +60,7 @@ Private Sub writeNonRxReportRecord(ByVal record As RecordTuple)
 End Sub
 
 Public Sub generateNonRxReport()
-    SheetUtilities.getNonRxReportRng.Clear
+    SheetUtilities.getNonRxReportRng(True).Clear
     
     Dim addresses As Scripting.Dictionary
     Set addresses = records.loadAddresses(AddressesSheet.Name)

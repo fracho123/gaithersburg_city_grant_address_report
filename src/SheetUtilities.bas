@@ -445,7 +445,7 @@ Public Sub ClearAll()
     
     getRxTotalsRng.value = 0
     
-    getNonRxReportRng.Clear
+    getNonRxReportRng(True).Clear
     getRxReportRng.Clear
     
     ClearSheet AutocorrectAddressesSheet.Name

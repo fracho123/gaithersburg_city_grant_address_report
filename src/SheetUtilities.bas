@@ -228,8 +228,10 @@ Public Function getRxDiscardedIDsRng() As Range
     Set getRxDiscardedIDsRng = RxSheet.Range("I8")
 End Function
 
-Public Function getNonRxReportRng() As Range
-    Set getNonRxReportRng = getRng(NonRxReportSheet.Name, "A3", "P3")
+Public Function getNonRxReportRng(Optional ByVal withMonths As Boolean = False) As Range
+    Dim endColumn As String
+    If (withMonths) Then endColumn = "AB3" Else endColumn = "P3"
+    Set getNonRxReportRng = getRng(NonRxReportSheet.Name, "A3", endColumn)
 End Function
 
 Public Function getRxReportRng() As Range
@@ -443,7 +445,7 @@ Public Sub ClearAll()
     
     getRxTotalsRng.value = 0
     
-    getNonRxReportRng.Clear
+    getNonRxReportRng(True).Clear
     getRxReportRng.Clear
     
     ClearSheet AutocorrectAddressesSheet.Name
@@ -580,7 +582,7 @@ End Function
 
 ' Converts date string to quarter
 Public Function getQuarterStr(ByVal dateStr As String) As String
-    Select Case month(dateStr)
+    Select Case Month(dateStr)
         Case 7 To 9
             getQuarterStr = "Q1"
         Case 10 To 12
@@ -652,4 +654,5 @@ Public Sub TestSetupCleanup()
     Autocorrect.printRemainingRequests 8000
     MacroExit InterfaceSheet
 End Sub
+
 

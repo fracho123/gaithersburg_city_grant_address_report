@@ -42,10 +42,10 @@ Private pZeroToOneTotal As Long
 Private pTwoToSeventeenTotal As Long
 Private pEighteenPlusTotal As Long
 
-' Quarter: Dictionary (VisitDate CStr(Date): RxTotal Double)
+' Quarter key: (Visit date CStr(Date) key: RxTotal Double)
 Private pRxTotal As Scripting.Dictionary
 
-' Service: Dictionary (Quarter: VisitDate CStr(CDate) Collection)
+' Service key: (Quarter key: (Visit date CStr(CDate) Collection)
 Private pVisitData As Scripting.Dictionary
 
 Private pGburgFormatRawAddress As Scripting.Dictionary
@@ -389,24 +389,27 @@ Private Sub MergeVisitData(ByVal visitDataToMerge As Scripting.Dictionary)
 End Sub
 
 ' Returns 1-based array of whether record has quarter or not
-Public Property Get Quarters() As Boolean()
+' Can exclude Rx records
+Public Property Get Quarters(Optional ByVal excludeRx As Boolean = False) As Boolean()
     Dim quarterArr(1 To 4) As Boolean
     
     Dim service As Variant
     For Each service In visitData
-        Dim quarter As Variant
-        For Each quarter In visitData.Item(service)
-            Select Case quarter
-                Case "Q1"
-                    quarterArr(1) = True
-                Case "Q2"
-                    quarterArr(2) = True
-                Case "Q3"
-                    quarterArr(3) = True
-                Case "Q4"
-                    quarterArr(4) = True
-            End Select
-        Next quarter
+        If Not (excludeRx And (service = "Rx Asst")) Then
+            Dim quarter As Variant
+            For Each quarter In visitData.Item(service)
+                Select Case quarter
+                    Case "Q1"
+                        quarterArr(1) = True
+                    Case "Q2"
+                        quarterArr(2) = True
+                    Case "Q3"
+                        quarterArr(3) = True
+                    Case "Q4"
+                        quarterArr(4) = True
+                End Select
+            Next quarter
+        End If
     Next service
 
     Quarters = quarterArr
@@ -679,4 +682,12 @@ Public Function isCorrectableAddress() As Boolean
     End Select
 End Function
 
-
+Public Function isRxOnly() As Boolean
+    Dim services As Variant
+    services = visitData.Keys
+    If UBound(services) = -1 Then
+        isRxOnly = False
+    Else
+        isRxOnly = (visitData.count = 1) And (services(0) = "Rx Asst")
+    End If
+End Function

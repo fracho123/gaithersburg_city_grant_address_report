@@ -1,0 +1,18 @@
+Visit on,Tracking Method,Guest ID,First Name,Last Name,Address,Apartment/Suite,City/Town,State/Province,Zip/Postal Code,Total Individuals,0 to 1,2 to 17,18+,--- TOTAL Rx COSTS (number only 0.00),,Test notes
+1/6/2023 10:04,Food,7544,Crabcake,Dinosaur,501A S. Frederick Ave,1,Gaithersburg,MD,20877,1,0,0,1,,,
+10/3/2023 9:55,Rx Asst,6468,Jupiter,Quinoa,742 QUINCE ORCHARD BLVD,T1,Gaithersburg,MD,20878,1,0,0,1,28,,Rx only should not be included in NonRx Report
+2/28/2023,Food,7728,Moxie Doxie,Manifold Populate,9 E Deer Park DR,305,Gaithersburg,MD,20877,3,0,1,2,7.3,,
+3/21/2023,Food,6842,Justin,Case,200 OLDE TOWNE  AVE,202,Gaithersburg,MD,20877,3,0,0,3,,,
+5/31/2023,Food,6570,Supine,Yellow Orchard Juke,20 ONEILL DR,5,Gaithersburg,MD,20877,6,0,0,6,,,
+6/25/2023,Food,7685,Anita,Thapa,28 Oneil Dr,1,Gaithersburg,MD,20877,5,0,0,5,,,
+4/14/2023,Food,1567,Nope,Yep,20 O'NEILL DR,5,Gaithersburg,MD,20877,6,0,0,6,11,,
+8/31/2023,Food,8888,Junk,Yard,534 Odendhal AVE,,Gaithersburg,MD,20877,6,0,0,6,22,,
+11/15/2023,Food,9999,Hats,Off,534 Odendhal Ave,,Gaithersburg,MD,20877,6,0,0,6,45,,
+10/7/2023,Food,4125,Nutcase,Pendleton,3 MCCAUSLAND PL,202,Gaithersburg,MD,20877,9,0,0,9,,,
+12/5/2023 11:00,18,2260,Thirst,Hunger,405 CHRISTOPHER AVE,T3,Gaithersburg,MD,20879,1,0,0,1,,,
+9/2/2023 9:35,Rx Asst,7514,Music,Quartet,413 MUDDY BRANCH RD,T2,Gaithersburg,MD,20878,8,0,0,8,,,Rx only should not be included in NonRx Report but the other service should
+7/5/2023 9:35,Food,7514,Music,Quartet,413 MUDDY BRANCH RD,T2,Gaithersburg,MD,20878,8,0,0,8,,,Should be included
+9/28/2023,Food,1111,Why,This,101 Odendhal AVE,1007,Gaitheburg,ME,20870,6,0,0,6,,,
+2/28/2023,7,7728,Moxie Doxie,Manifold Populate,9 E Deer Park DR,305,Gaithersburg,MD,20877,3,0,1,2,5.5,,
+3/28/2023,7,7728,Moxie Doxie,Manifold Populate,9 E Deer Park DR,305,Gaithersburg,MD,20877,3,0,1,2,5.5,,
+3/28/2023,Food,1001,Knife,Fightin,901 Russell Ave,Suite 201,Gaithersburg,MD,20877,3,0,0,3,,,

@@ -685,5 +685,9 @@ End Function
 Public Function isRxOnly() As Boolean
     Dim services As Variant
     services = visitData.Keys
-    isRxOnly = (visitData.count = 1) And (services(0) = "Rx Asst")
+    If UBound(services) = -1 Then
+        isRxOnly = False
+    Else
+        isRxOnly = (visitData.count = 1) And (services(0) = "Rx Asst")
+    End If
 End Function

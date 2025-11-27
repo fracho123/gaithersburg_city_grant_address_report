@@ -71,7 +71,11 @@ Public Sub generateNonRxReport()
         Dim record As RecordTuple
         Set record = addresses.Item(address)
         
-        If Not record.isRxOnly Then writeNonRxReportRecord record
+        If (record.InCity = ValidInCity) And _
+           (record.visitData.count > 0) And _
+           (Not record.isRxOnly) Then
+           writeNonRxReportRecord record
+        End If
     Next address
     
     SheetUtilities.SortSheet NonRxReportSheet.Name

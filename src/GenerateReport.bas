@@ -21,13 +21,12 @@ Private Sub writeNonRxReportRecord(ByVal record As RecordTuple)
     row.Cells.Item(1, 12) = record.zeroToOneTotal + record.twoToSeventeenTotal
     
     Dim Quarters() As Boolean
-    Quarters = record.Quarters
+    Quarters = record.Quarters(True)
     If Quarters(1) Then row.Cells.Item(1, 13) = "x"
     If Quarters(2) Then row.Cells.Item(1, 14) = "x"
     If Quarters(3) Then row.Cells.Item(1, 15) = "x"
     If Quarters(4) Then row.Cells.Item(1, 16) = "x"
     
-    ' --- New: monthly flags (Jan..Dec) ---
     Dim Months(1 To 12) As Boolean
     Dim svc As Variant
     Dim q As Variant
@@ -37,17 +36,19 @@ Private Sub writeNonRxReportRecord(ByVal record As RecordTuple)
     
     ' Walk all services, quarters, and visit dates
     For Each svc In record.visitData.Keys
-        For Each q In record.visitData.Item(svc).Keys
-            For Each v In record.visitData.Item(svc).Item(q)
-                If Not IsEmpty(v) And v <> vbNullString Then
-                    d = CDate(v)
-                    m = Month(d)
-                    If m >= 1 And m <= 12 Then
-                        Months(m) = True
+        If svc <> "Rx Asst" Then
+            For Each q In record.visitData.Item(svc).Keys
+                For Each v In record.visitData.Item(svc).Item(q)
+                    If Not IsEmpty(v) And v <> vbNullString Then
+                        d = CDate(v)
+                        m = Month(d)
+                        If m >= 1 And m <= 12 Then
+                            Months(m) = True
+                        End If
                     End If
-                End If
-            Next v
-        Next q
+                Next v
+            Next q
+        End If
     Next svc
     
     Const FIRST_MONTH_COL As Long = 17
@@ -60,7 +61,7 @@ Private Sub writeNonRxReportRecord(ByVal record As RecordTuple)
 End Sub
 
 Public Sub generateNonRxReport()
-    SheetUtilities.getNonRxReportRng.Clear
+    SheetUtilities.getNonRxReportRng(True).Clear
     
     Dim addresses As Scripting.Dictionary
     Set addresses = records.loadAddresses(AddressesSheet.Name)
@@ -70,7 +71,11 @@ Public Sub generateNonRxReport()
         Dim record As RecordTuple
         Set record = addresses.Item(address)
         
-        If record.InCity = ValidInCity And record.visitData.count > 0 Then writeNonRxReportRecord record
+        If (record.InCity = ValidInCity) And _
+           (record.visitData.count > 0) And _
+           (Not record.isRxOnly) Then
+           writeNonRxReportRecord record
+        End If
     Next address
     
     SheetUtilities.SortSheet NonRxReportSheet.Name

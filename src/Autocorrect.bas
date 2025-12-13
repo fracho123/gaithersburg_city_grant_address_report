@@ -9,7 +9,7 @@ Public Function getRemainingRequests() As Long
     text = SheetUtilities.getAutocorrectRequestCharacters.text
     Dim refreshMonth As String
     refreshMonth = Lookup.RWordTrim(text)(1)
-    If month(DateValue(refreshMonth & " 1 2024")) = month(Date) Then
+    If Month(DateValue(refreshMonth & " 1 2024")) = Month(Date) Then
         ' Limit refreshed this month
         printRemainingRequests (requestLimit)
         getRemainingRequests = requestLimit
@@ -20,10 +20,10 @@ End Function
 
 Public Sub printRemainingRequests(ByVal num As Long)
     Dim nameOfMonth As String
-    If month(Date) = 12 Then
+    If Month(Date) = 12 Then
         nameOfMonth = "January"
     Else
-        nameOfMonth = MonthName(month(Date) + 1)
+        nameOfMonth = MonthName(Month(Date) + 1)
     End If
     SheetUtilities.getAutocorrectRequestCharacters.text = _
         num & " / " & requestLimit & " left until " & nameOfMonth

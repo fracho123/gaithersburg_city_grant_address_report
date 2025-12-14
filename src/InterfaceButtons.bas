@@ -226,7 +226,7 @@ Public Sub confirmDeleteAllVisitData()
     SheetUtilities.getInterfaceMostRecentRng.value = vbNullString
     SheetUtilities.ClearInterfaceTotals
     SheetUtilities.getCountyRng.value = 0
-    SheetUtilities.getNonRxReportRng.Clear
+    SheetUtilities.getNonRxReportRng(True).Clear
     SheetUtilities.getRxReportRng.Clear
     SheetUtilities.getAddressVisitDataRng(AddressesSheet.Name).Clear
     SheetUtilities.getRng(AddressesSheet.Name, "A2", "A2").Offset(0, SheetUtilities.firstServiceColumn - 2).value = "{}"
@@ -415,7 +415,7 @@ Public Sub confirmMoveAutocorrect()
     
     moveSelectedRows AddressesSheet.Name, AutocorrectAddressesSheet.Name, True
     SheetUtilities.getRxReportRng.Clear
-    SheetUtilities.getNonRxReportRng.Clear
+    SheetUtilities.getNonRxReportRng(True).Clear
     records.computeInterfaceTotals
     
     MacroExit ThisWorkbook.ActiveSheet

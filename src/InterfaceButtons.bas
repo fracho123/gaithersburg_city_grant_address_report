@@ -226,7 +226,7 @@ Public Sub confirmDeleteAllVisitData()
     SheetUtilities.getInterfaceMostRecentRng.value = vbNullString
     SheetUtilities.ClearInterfaceTotals
     SheetUtilities.getCountyRng.value = 0
-    SheetUtilities.getNonRxReportRng(True).Clear
+    SheetUtilities.getNonRxReportRng.Clear
     SheetUtilities.getRxReportRng.Clear
     SheetUtilities.getAddressVisitDataRng(AddressesSheet.Name).Clear
     SheetUtilities.getRng(AddressesSheet.Name, "A2", "A2").Offset(0, SheetUtilities.firstServiceColumn - 2).value = "{}"
@@ -415,7 +415,7 @@ Public Sub confirmMoveAutocorrect()
     
     moveSelectedRows AddressesSheet.Name, AutocorrectAddressesSheet.Name, True
     SheetUtilities.getRxReportRng.Clear
-    SheetUtilities.getNonRxReportRng(True).Clear
+    SheetUtilities.getNonRxReportRng.Clear
     records.computeInterfaceTotals
     
     MacroExit ThisWorkbook.ActiveSheet
@@ -538,83 +538,154 @@ Public Sub CopyAndOpenCountyTotalsSite()
     ' Use ~ as quote, replace with """" later
     Dim code As Variant
     code = vbNullString
-    code = code & "localStorage.setItem('AirtableLocalPersister.formPageElementSavedFormDataByElementId.appSbQN8aFnRtJgDl.paghjbBNBGqpEbTLu.pelcNPzsIY7D38G7V','{~lastTouchedTime~:~"
+    code = code & "localStorage.setItem('AirtableLocalPersister.formPageElementSavedFormDataByElementId.appSihm9stog1ZEFn.paglEufgcXNk939cP.peljJ5sUBYayWAHwc','{~lastTouchedTime~:~"
     code = code & Format$(Date - 1, "yyyy-mm-dd") & "T21:25:49.955Z" & "~,"
     code = code & "~cellValueByColumnId~:{"
-    code = code & "~fldl0cOUDvUCeDrln~: ~sel4b14BRPbjtmXOJ~,~fldRD1YXowe3Kg54S~: [{~foreignRowId~: ~recWHpCKSzyrrIFL3~,~foreignRowDisplayName~: ~20861~},{~foreignRowId~:~rec6JnzIIR8zbGoPj~,~foreignRowDisplayName~:~20906~},{~foreignRowId~:~rec0UoFQ634w3gzA0~,~foreignRowDisplayName~:~20916~},{~foreignRowId~:~recN7lnXDosJXZgEL~,~foreignRowDisplayName~:~20839~},{~foreignRowId~:~recqaXeoB3b55ZzKF~,~foreignRowDisplayName~:~20838~},{~foreignRowId~:~recYCWccvbmZiR8jg~,~foreignRowDisplayName~:~20813~},{~foreignRowId~:~recED69AIMnaEt9bV~,~foreignRowDisplayName~:~20814~},{~foreignRowId~:~recRNawBdXTAe0o6b~,~foreignRowDisplayName~:~20815~},{~foreignRowId~:~recP2nLMusF7DxOu2~,~foreignRowDisplayName~:~20816~},{~foreignRowId~:~recdQUTmjxgmldw8B~,~foreignRowDisplayName~:~20817~},{~foreignRowId~:~recoNTV14WcI7jlZc~,~foreignRowDisplayName~:~20824~},{~foreignRowId~:~recLYT0mN30ykq29x~,~foreignRowDisplayName~:~20825~},{~foreignRowId~:~recayKEdhMW2JEvFn~,~foreignRowDisplayName~:~20827~},"
-    code = code & "{~foreignRowId~:~recoQG3eA8Vg2UZpo~,~foreignRowDisplayName~:~20852~},{~foreignRowId~:~recPoCR4CjPhj9esT~,~foreignRowDisplayName~:~20841~},{~foreignRowId~:~rec0GXUpHUiXKdoIR~,~foreignRowDisplayName~:~20862~},{~foreignRowId~:~recKFsEclsshXcJBj~,~foreignRowDisplayName~:~20866~},{~foreignRowId~:~recJberDjIBO9wk4R~,~foreignRowDisplayName~:~20818~},{~foreignRowId~:~recL9OTHxFea0gseq~,~foreignRowDisplayName~:~20871~},{~foreignRowId~:~rec2gNpYUu3ak9IEd~,~foreignRowDisplayName~:~20904~},{~foreignRowId~:~rec0h0ubwEVbkPuva~,~foreignRowDisplayName~:~20905~},{~foreignRowId~:~recbNubdjBEjkOMwP~,~foreignRowDisplayName~:~20914~},{~foreignRowId~:~rec9d3FCNjKW2tvC3~,~foreignRowDisplayName~:~20872~},{~foreignRowId~:~recmQZOoCAxosd6hO~,~foreignRowDisplayName~:~20874~},{~foreignRowId~:~recQGYrqN1zp6wWKJ~,~foreignRowDisplayName~:~20878~},{~foreignRowId~:~recczFtG9wSAye66t~,~foreignRowDisplayName~:~20855~},{~foreignRowId~:~rech98chfjXO9Ous7~,~foreignRowDisplayName~:~20842~},"
-    code = code & "{~foreignRowId~:~recQwMVdsVLsehthI~,~foreignRowDisplayName~:~20877~},{~foreignRowId~:~recI05ELOhwmxTa80~,~foreignRowDisplayName~:~20879~},{~foreignRowId~:~rec5zZWgdLEa634Kx~,~foreignRowDisplayName~:~20882~},{~foreignRowId~:~recV1GOjqlE4dpvni~,~foreignRowDisplayName~:~20883~},{~foreignRowId~:~recbouJuGg7jGjBBb~,~foreignRowDisplayName~:~20884~},{~foreignRowId~:~recfaA9yA2YZTJubT~,~foreignRowDisplayName~:~20885~},{~foreignRowId~:~recuCpfxGyterlcjZ~,~foreignRowDisplayName~:~20886~},{~foreignRowId~:~recO1MSxJrJwBqBd4~,~foreignRowDisplayName~:~20898~},{~foreignRowId~:~recZsp2fjvP7PwXye~,~foreignRowDisplayName~:~20896~},{~foreignRowId~:~rectn5rpd0nWZmJcS~,~foreignRowDisplayName~:~20875~},{~foreignRowId~:~recdKoqjlxg5kxaWt~,~foreignRowDisplayName~:~20876~},{~foreignRowId~:~rec9aQ2bXKeSutK3l~,~foreignRowDisplayName~:~20812~},{~foreignRowId~:~recqCOeKzoQ7aHx44~,~foreignRowDisplayName~:~20891~},{~foreignRowId~:~rec3HskwYXqQgBI64~,~foreignRowDisplayName~:~20895~},"
-    code = code & "{~foreignRowId~:~recTfdEPcc84giMfY~,~foreignRowDisplayName~:~20830~},{~foreignRowId~:~recRObHiBYi2ePLsl~,~foreignRowDisplayName~:~20832~},{~foreignRowId~:~recJiwIe86Jot20gg~,~foreignRowDisplayName~:~20837~},{~foreignRowId~:~reckvUVjCOK5hzVhY~,~foreignRowDisplayName~:~20854~},{~foreignRowId~:~recwQgN0onMHWbluK~,~foreignRowDisplayName~:~20859~},{~foreignRowId~:~recdklYkW97iPsHGE~,~foreignRowDisplayName~:~20847~},{~foreignRowId~:~recYA6Xo3rotLCIvY~,~foreignRowDisplayName~:~20848~},{~foreignRowId~:~recJOh8lBL4xTEDT6~,~foreignRowDisplayName~:~20849~},{~foreignRowId~:~recVdg9onP5mN5bPh~,~foreignRowDisplayName~:~20850~},{~foreignRowId~:~recR2jMhZOflDNt8I~,~foreignRowDisplayName~:~20851~},{~foreignRowId~:~recb12lIMIfRuHEk4~,~foreignRowDisplayName~:~20853~},{~foreignRowId~:~rec8Q7SyKhJChivev~,~foreignRowDisplayName~:~20860~},{~foreignRowId~:~recPT00HV2FwpMaQQ~,~foreignRowDisplayName~:~20868~},{~foreignRowId~:~recgcnZCQvJfsqkFT~,~foreignRowDisplayName~:~20912~},"
-    code = code & "{~foreignRowId~:~reckodm7oUQiDbU8W~,~foreignRowDisplayName~:~20913~},{~foreignRowId~:~rec4XmPjkaHvgq4cd~,~foreignRowDisplayName~:~20901~},{~foreignRowId~:~recnzLv6tmo6J5m66~,~foreignRowDisplayName~:~20902~},{~foreignRowId~:~recAuxevvctrR7RGd~,~foreignRowDisplayName~:~20903~},{~foreignRowId~:~recr9Snbah0lcWkfp~,~foreignRowDisplayName~:~20907~},{~foreignRowId~:~rec6RgwBZKh1Nk2iV~,~foreignRowDisplayName~:~20908~},{~foreignRowId~:~recqVhZhZ0ZDXsMcf~,~foreignRowDisplayName~:~20910~},{~foreignRowId~:~recBZxXpmzl9cVNGv~,~foreignRowDisplayName~:~20911~},{~foreignRowId~:~recBRWy1CoeZA9aIY~,~foreignRowDisplayName~:~20915~},{~foreignRowId~:~reczeqj8yhSyGcDUE~,~foreignRowDisplayName~:~20918~},{~foreignRowId~:~recHL1TlVwpBqZ9kF~,~foreignRowDisplayName~:~20880~}],~fldAIwqOBPimQ2H18~:[{~foreignRowId~:~recX8z5e6kdwpqX4l~,~foreignRowDisplayName~:~GaithersburgHELP,Inc.~}],"
     
-    code = code & "~fldcAkWSVtnA2WSBg~: " & values.Cells.Item(1, 2).value & ","
-    code = code & "~fldTgMj5Z4w4jTyR4~:" & values.Cells.Item(1, 3).value & ","
-    code = code & "~flds4icAlgYgtKxXa~:" & values.Cells.Item(1, 9).value & ","
-    code = code & "~fldAmOauQkZoxmHAP~:" & CStr(values.Cells.Item(1, 10).value + values.Cells.Item(1, 84).value) & ","
-    code = code & "~fldUzBeCIr6WrMYxO~:" & CStr(values.Cells.Item(1, 11).value + values.Cells.Item(1, 93).value) & ","
-    code = code & "~fld6qKGCjv2lgfnHI~:" & values.Cells.Item(1, 12).value & ","
-    code = code & "~fldBk8oK7AZFXjTEG~:" & values.Cells.Item(1, 13).value & ","
-    code = code & "~fld6YSs58ktJehdLW~:" & values.Cells.Item(1, 14).value & ","
-    code = code & "~fld9QSxMT6PT15f4N~:" & values.Cells.Item(1, 15).value & ","
-    code = code & "~fldHtsF4FfGWW4wpp~:" & CStr(values.Cells.Item(1, 16).value + values.Cells.Item(1, 27)) & ","
-    code = code & "~fldXq8cJ8Y2NWrJTn~:" & values.Cells.Item(1, 17).value & ","
-    code = code & "~fldEc7D11e9vxK8Et~:" & values.Cells.Item(1, 18).value & ","
-    code = code & "~fldQSTH5DP03lR4EE~:" & values.Cells.Item(1, 19).value & ","
-    code = code & "~fldTMpf9usGCsSyJO~:" & CStr(values.Cells.Item(1, 20).value + values.Cells.Item(1, 28).value) & ","
-    code = code & "~fldJRxJhz0lPktGKc~:" & values.Cells.Item(1, 21).value & ","
-    code = code & "~fldLPNKB6QcdJ8fDK~:" & CStr(values.Cells.Item(1, 22).value + values.Cells.Item(1, 70).value) & ","
-    code = code & "~fldjEMDUhU919URRV~:" & values.Cells.Item(1, 23).value & ","
-    code = code & "~fldgVlvfPzxn5eCRq~:" & values.Cells.Item(1, 24).value & ","
-    code = code & "~fld67bhZmv77zN9uA~:" & values.Cells.Item(1, 25).value & ","
-    code = code & "~fldd0RYD8HnI0rYcG~:" & values.Cells.Item(1, 26).value & ","
-    code = code & "~fldP9N2QVs5dxFKT0~:" & values.Cells.Item(1, 29).value & ","
-    code = code & "~fldWbPWbKJ3jfq9Fl~:" & CStr(values.Cells.Item(1, 30).value + values.Cells.Item(1, 82).value) & ","
-    code = code & "~fldGm2CNYaDfj1WDJ~:" & CStr(values.Cells.Item(1, 31).value + values.Cells.Item(1, 83).value) & ","
-    code = code & "~fldSpkgr2gF23ubJB~:" & CStr(values.Cells.Item(1, 32).value + values.Cells.Item(1, 91).value) & ","
-    code = code & "~fld0fmGzYhxFtfSMs~:" & values.Cells.Item(1, 33).value & ","
-    code = code & "~fldJbb7bJv9fzf81Y~:" & CStr(values.Cells.Item(1, 34).value + values.Cells.Item(1, 48).value) & ","
-    code = code & "~fldPRC1T7NrvJ4stH~:" & CStr(values.Cells.Item(1, 35).value + values.Cells.Item(1, 39).value + values.Cells.Item(1, 64).value) & ","
-    code = code & "~fldGSQ0dn8s89IHvb~:" & CStr(values.Cells.Item(1, 36).value + values.Cells.Item(1, 73).value) & ","
-    code = code & "~fldmjaDRuekAqsa7C~:" & values.Cells.Item(1, 37).value & ","
-    code = code & "~fldJMQNMniEiQdbQ0~:" & CStr(values.Cells.Item(1, 38).value + values.Cells.Item(1, 56).value) & ","
-    code = code & "~fldGz7xlhjMnRaeop~:" & CStr(values.Cells.Item(1, 40).value + values.Cells.Item(1, 54).value + values.Cells.Item(1, 57).value) & ","
-    code = code & "~fld0Hypc9v51vPh24~:" & CStr(values.Cells.Item(1, 41).value + values.Cells.Item(1, 55).value) & ","
-    code = code & "~flduaScn4cbua1tzm~:" & values.Cells.Item(1, 42).value & ","
-    code = code & "~flduJb5vwcxRZTPr6~:" & values.Cells.Item(1, 43).value & ","
-    code = code & "~fldJc3oAaR7WRSUVO~:" & values.Cells.Item(1, 44).value & ","
-    code = code & "~fldL4uViATWSYFzUK~:" & CStr(values.Cells.Item(1, 45).value + values.Cells.Item(1, 58).value) & ","
-    code = code & "~fldcayWHBXuqwMayz~:" & values.Cells.Item(1, 46).value & ","
-    code = code & "~fldp2SINVQlrjeQCk~:" & values.Cells.Item(1, 47).value & ","
-    code = code & "~fld9Ego3Gt2GCUNqZ~:" & values.Cells.Item(1, 49).value & ","
-    code = code & "~fldEoHWUYrFOzmcix~:" & values.Cells.Item(1, 50).value & ","
-    code = code & "~fldcRgzWt69k85pMk~:" & values.Cells.Item(1, 51).value & ","
-    code = code & "~fldIrsEhpV0XYRTGr~:" & values.Cells.Item(1, 52).value & ","
-    code = code & "~fldkeqSwi6FY35g15~:" & values.Cells.Item(1, 53).value & ","
-    code = code & "~fldz2OgXVhm6VYlGb~:" & values.Cells.Item(1, 59).value & ","
-    code = code & "~fldLqzEJz4AAyWLjY~:" & values.Cells.Item(1, 60).value & ","
-    code = code & "~fldDZYTEXeWwCGebu~:" & values.Cells.Item(1, 61).value & ","
-    code = code & "~fldh49H9rAvxFI3Sb~:" & CStr(values.Cells.Item(1, 62).value + values.Cells.Item(1, 72).value) & ","
-    code = code & "~fldGXGXeqx2dErAce~:" & CStr(values.Cells.Item(1, 63).value + values.Cells.Item(1, 74).value) & ","
-    code = code & "~fld5uhbvzq9QMwoHD~:" & values.Cells.Item(1, 65).value & ","
-    code = code & "~fld0jMzTXV1aJkw5S~:" & values.Cells.Item(1, 66).value & ","
-    code = code & "~fld5OcDa1nsoLBwfy~:" & values.Cells.Item(1, 67).value & ","
-    code = code & "~fldlYAEqyU6JApxio~:" & values.Cells.Item(1, 68).value & ","
-    code = code & "~fldJhYaiSG4a6sqHY~:" & values.Cells.Item(1, 69).value & ","
-    code = code & "~fldS2dGxCP8LpbJi7~:" & values.Cells.Item(1, 71).value & ","
-    code = code & "~fldO7lvG9pd2Y5WzK~:" & values.Cells.Item(1, 75).value & ","
-    code = code & "~fldkUX0808Jz0sg59~:" & values.Cells.Item(1, 76).value & ","
-    code = code & "~fldK2C3IWuW9rIfVH~:" & CStr(values.Cells.Item(1, 77).value + values.Cells.Item(1, 89).value) & ","
-    code = code & "~fldeNgJa1zeSdd7eX~:" & CStr(values.Cells.Item(1, 78).value + values.Cells.Item(1, 90).value) & ","
-    code = code & "~fld987t6GKjDJVnPO~:" & values.Cells.Item(1, 79).value & ","
-    code = code & "~fldXEfo3haPMVr8Wo~:" & CStr(values.Cells.Item(1, 80).value + values.Cells.Item(1, 96).value) & ","
-    code = code & "~fldc2ls2xOBA4wgxz~:" & values.Cells.Item(1, 81).value & ","
-    code = code & "~fldRak02MKqgSs6VJ~:" & values.Cells.Item(1, 85).value & ","
-    code = code & "~fldLCzskTnmLYHqym~:" & values.Cells.Item(1, 86).value & ","
-    code = code & "~fld9dQWSUzcGdTVGI~:" & values.Cells.Item(1, 87).value & ","
-    code = code & "~fldjmoMRWUWs5WdXb~:" & values.Cells.Item(1, 88).value & ","
-    code = code & "~fldN2QYoc9eBu0vNH~:" & CStr(values.Cells.Item(1, 92).value + values.Cells.Item(1, 97)) & ","
-    code = code & "~fldttJzWI1rdLMgtf~:" & values.Cells.Item(1, 94).value & ","
-    code = code & "~fldKLR2lQdFHoX9QV~:" & values.Cells.Item(1, 95).value
+    ' ===== Report type (new field + new sel option) =====
+    code = code & "~fldT5jmhPTnnuef2s~: ~selXGhScETeagB5Bm~,"
+    
+    ' ===== Zip Codes (new field + new record IDs) =====
+    code = code & "~fldGCWr86vBijnH0L~: ["
+    code = code & "{~foreignRowId~:~reckFHeR3xkx9s0WU~,~foreignRowDisplayName~:~20861~},"
+    code = code & "{~foreignRowId~:~recaDALUl7ErnXJWk~,~foreignRowDisplayName~:~20906~},"
+    code = code & "{~foreignRowId~:~rec6PYak2TL1s9BtO~,~foreignRowDisplayName~:~20916~},"
+    code = code & "{~foreignRowId~:~recyWZFWxckLqCWf5~,~foreignRowDisplayName~:~20839~},"
+    code = code & "{~foreignRowId~:~recjTVJUZLYq01qjy~,~foreignRowDisplayName~:~20838~},"
+    code = code & "{~foreignRowId~:~recPjNimCmfmw5DQR~,~foreignRowDisplayName~:~20813~},"
+    code = code & "{~foreignRowId~:~recom6UQpScTzf3YR~,~foreignRowDisplayName~:~20814~},"
+    code = code & "{~foreignRowId~:~rec8Gp0LYJfZkdi7s~,~foreignRowDisplayName~:~20815~},"
+    code = code & "{~foreignRowId~:~recOITGamcrifX2hT~,~foreignRowDisplayName~:~20816~},"
+    code = code & "{~foreignRowId~:~reccMJqmX4WD0DrmL~,~foreignRowDisplayName~:~20817~},"
+    code = code & "{~foreignRowId~:~recGhpUZE2AfGsbw4~,~foreignRowDisplayName~:~20824~},"
+    code = code & "{~foreignRowId~:~recP8epKliF8VGiX7~,~foreignRowDisplayName~:~20825~},"
+    code = code & "{~foreignRowId~:~reccWPZOY9tDt486f~,~foreignRowDisplayName~:~20827~},"
+    code = code & "{~foreignRowId~:~recVA5KbCdrV30fz7~,~foreignRowDisplayName~:~20852~},"
+    code = code & "{~foreignRowId~:~recwvEx7G2QCyoIuJ~,~foreignRowDisplayName~:~20841~},"
+    code = code & "{~foreignRowId~:~recCWObQeUqsB69ma~,~foreignRowDisplayName~:~20862~},"
+    code = code & "{~foreignRowId~:~recOVP6McjqisdNJx~,~foreignRowDisplayName~:~20866~},"
+    code = code & "{~foreignRowId~:~recARD7UxWbsc5HuB~,~foreignRowDisplayName~:~20818~},"
+    code = code & "{~foreignRowId~:~recK2euqytAvgm1tA~,~foreignRowDisplayName~:~20871~},"
+    code = code & "{~foreignRowId~:~rec9WVSX0bAk01E7t~,~foreignRowDisplayName~:~20904~},"
+    code = code & "{~foreignRowId~:~recR9f8p2TfPwnqMO~,~foreignRowDisplayName~:~20905~},"
+    code = code & "{~foreignRowId~:~recwDTWnwWKuU2MRt~,~foreignRowDisplayName~:~20914~},"
+    code = code & "{~foreignRowId~:~recAAYzHQsMK4OzRK~,~foreignRowDisplayName~:~20872~},"
+    code = code & "{~foreignRowId~:~recG42IfSpAxRR1nk~,~foreignRowDisplayName~:~20874~},"
+    code = code & "{~foreignRowId~:~rec6M3rSPnj18UzfV~,~foreignRowDisplayName~:~20878~},"
+    code = code & "{~foreignRowId~:~recpyPAzM06jcG5Zn~,~foreignRowDisplayName~:~20855~},"
+    code = code & "{~foreignRowId~:~recA4B1fUjDMks5mw~,~foreignRowDisplayName~:~20842~},"
+    code = code & "{~foreignRowId~:~rec4MSVC2Bo3Mmkp9~,~foreignRowDisplayName~:~20877~},"
+    code = code & "{~foreignRowId~:~recvZ0dWIQGVNUqx5~,~foreignRowDisplayName~:~20879~},"
+    code = code & "{~foreignRowId~:~recxtVOehpwplKyWz~,~foreignRowDisplayName~:~20882~},"
+    code = code & "{~foreignRowId~:~recUONkgEgwHRGptt~,~foreignRowDisplayName~:~20883~},"
+    code = code & "{~foreignRowId~:~recCfMSOTR6uskvf5~,~foreignRowDisplayName~:~20884~},"
+    code = code & "{~foreignRowId~:~recWrW5Ut7I9GioA7~,~foreignRowDisplayName~:~20885~},"
+    code = code & "{~foreignRowId~:~recLCc2eWVfaHgkDY~,~foreignRowDisplayName~:~20886~},"
+    code = code & "{~foreignRowId~:~recpUmnEzxxh6t3ke~,~foreignRowDisplayName~:~20898~},"
+    code = code & "{~foreignRowId~:~recsDaO7odalfJWJF~,~foreignRowDisplayName~:~20896~},"
+    code = code & "{~foreignRowId~:~rece3FB3HPN8SxqTD~,~foreignRowDisplayName~:~20875~},"
+    code = code & "{~foreignRowId~:~reclVkFLkMot3zCRL~,~foreignRowDisplayName~:~20876~},"
+    code = code & "{~foreignRowId~:~recEWJcGpBKzl8Ypl~,~foreignRowDisplayName~:~20812~},"
+    code = code & "{~foreignRowId~:~recBYvzgcjrcychGv~,~foreignRowDisplayName~:~20891~},"
+    code = code & "{~foreignRowId~:~recv1xFKz1DoNSWNk~,~foreignRowDisplayName~:~20895~},"
+    code = code & "{~foreignRowId~:~recI5YsdFoc0oU71H~,~foreignRowDisplayName~:~20830~},"
+    code = code & "{~foreignRowId~:~recpwgU2teHwhjq9z~,~foreignRowDisplayName~:~20832~},"
+    code = code & "{~foreignRowId~:~recBqYUvTjtzt0932~,~foreignRowDisplayName~:~20837~},"
+    code = code & "{~foreignRowId~:~recEuaQ8eOGeXc9n6~,~foreignRowDisplayName~:~20854~},"
+    code = code & "{~foreignRowId~:~recyDpULBxTpQQbLY~,~foreignRowDisplayName~:~20859~},"
+    code = code & "{~foreignRowId~:~recA6NNCdFUa3Qzzt~,~foreignRowDisplayName~:~20847~},"
+    code = code & "{~foreignRowId~:~recElDh97gL2blpzV~,~foreignRowDisplayName~:~20848~},"
+    code = code & "{~foreignRowId~:~recYzfDIwQE52NW26~,~foreignRowDisplayName~:~20849~},"
+    code = code & "{~foreignRowId~:~recN4BytSyXXTcoGF~,~foreignRowDisplayName~:~20850~},"
+    code = code & "{~foreignRowId~:~recJZvPGK9NxOpiy5~,~foreignRowDisplayName~:~20851~},"
+    code = code & "{~foreignRowId~:~reclV98twecZLR1Fp~,~foreignRowDisplayName~:~20853~},"
+    code = code & "{~foreignRowId~:~recxTzSMQAVBSPznH~,~foreignRowDisplayName~:~20860~},"
+    code = code & "{~foreignRowId~:~recEQj9TmIMUDngjv~,~foreignRowDisplayName~:~20868~},"
+    code = code & "{~foreignRowId~:~recKmi1zMQ546CNZi~,~foreignRowDisplayName~:~20912~},"
+    code = code & "{~foreignRowId~:~recVXx8P4AbYpn8wz~,~foreignRowDisplayName~:~20913~},"
+    code = code & "{~foreignRowId~:~recx6miNOzrcHrQxu~,~foreignRowDisplayName~:~20901~},"
+    code = code & "{~foreignRowId~:~recj0QdHfH80Jn39Q~,~foreignRowDisplayName~:~20902~},"
+    code = code & "{~foreignRowId~:~recEu7dTAkdCAegOz~,~foreignRowDisplayName~:~20903~},"
+    code = code & "{~foreignRowId~:~reclA4inZtkmJv1Z9~,~foreignRowDisplayName~:~20907~},"
+    code = code & "{~foreignRowId~:~recTrFAiJ5ZKhS8gw~,~foreignRowDisplayName~:~20908~},"
+    code = code & "{~foreignRowId~:~rec3eEVpND2CHerc0~,~foreignRowDisplayName~:~20910~},"
+    code = code & "{~foreignRowId~:~recV1lf0PY2s9jYcM~,~foreignRowDisplayName~:~20911~},"
+    code = code & "{~foreignRowId~:~rec4W0bXx1GuK7twl~,~foreignRowDisplayName~:~20915~},"
+    code = code & "{~foreignRowId~:~rectKTrh9I6Dx8sVV~,~foreignRowDisplayName~:~20918~},"
+    code = code & "{~foreignRowId~:~recMccNHBU1ZorCnf~,~foreignRowDisplayName~:~20880~}"
+    code = code & "],"
+    
+    
+    ' ===== Now the numeric fields (same Excel cell math, NEW fld IDs) =====
+    code = code & "~fldZN0BOwVtzwg515~:" & values.Cells.Item(1, 2).value & ","
+    code = code & "~fldwokr57DoxDn3EX~:" & values.Cells.Item(1, 3).value & ","
+
+    code = code & "~fldVdeLxrqXtv1HwT~:" & values.Cells.Item(1, 9).value & "," ' 20861
+    code = code & "~fldOitAqqQmE2zASo~:" & CStr(values.Cells.Item(1, 10).value + values.Cells.Item(1, 84).value) & "," ' 20906
+    code = code & "~fld4uG0pREOvMk2hP~:" & CStr(values.Cells.Item(1, 11).value + values.Cells.Item(1, 93).value) & "," ' 20916
+    code = code & "~fldhLnXYWyF6rnz0w~:" & values.Cells.Item(1, 12).value & "," ' 20839
+    code = code & "~fld0XsG5ezAhm7LPi~:" & values.Cells.Item(1, 13).value & "," ' 20838
+    code = code & "~fldoAtLzSc1G6l1e3~:" & values.Cells.Item(1, 14).value & "," ' 20813
+    code = code & "~fldn8V1aQ4x3sUhC2~:" & values.Cells.Item(1, 15).value & "," ' 20814
+    code = code & "~fldGko07MPC9Cw4Fq~:" & CStr(values.Cells.Item(1, 16).value + values.Cells.Item(1, 27).value) & "," ' 20815
+    code = code & "~fldhqlkOxbNLcSLmz~:" & values.Cells.Item(1, 17).value & "," ' 20816
+    code = code & "~fldBzVx8fEXHWx86i~:" & values.Cells.Item(1, 18).value & "," ' 20817
+    code = code & "~fldasKigxU7L0HaYE~:" & values.Cells.Item(1, 19).value & "," ' 20824
+    code = code & "~fldACPmds1luOIWfc~:" & CStr(values.Cells.Item(1, 20).value + values.Cells.Item(1, 28).value) & "," ' 20825
+    code = code & "~fld1tyUu8DxLUvwtS~:" & values.Cells.Item(1, 21).value & "," ' 20827
+    code = code & "~fldEm2hgmXgcncpqc~:" & CStr(values.Cells.Item(1, 22).value + values.Cells.Item(1, 70).value) & "," ' 20852
+    code = code & "~fldBHH15zEuQOzSGc~:" & values.Cells.Item(1, 23).value & "," ' 20841
+    code = code & "~fldFQusJ5jh1qDJql~:" & values.Cells.Item(1, 24).value & "," ' 20862
+    code = code & "~fldFz3qDfIl8QTMUt~:" & values.Cells.Item(1, 25).value & "," ' 20866
+    code = code & "~fldsBFIpe2tMzJxNg~:" & values.Cells.Item(1, 26).value & "," ' 20818
+    code = code & "~fldny8LMLt8RrOAZY~:" & values.Cells.Item(1, 29).value & "," ' 20871
+    code = code & "~fld5XhCFuO3wJxCur~:" & CStr(values.Cells.Item(1, 30).value + values.Cells.Item(1, 82).value) & "," ' 20904
+    code = code & "~fldXYnNjWL2RwuVvO~:" & CStr(values.Cells.Item(1, 31).value + values.Cells.Item(1, 83).value) & "," ' 20905
+    code = code & "~fld0JeTuUa91pGPtm~:" & CStr(values.Cells.Item(1, 32).value + values.Cells.Item(1, 91).value) & "," ' 20914
+    code = code & "~fldXUOs8ZJYNW5tcB~:" & values.Cells.Item(1, 33).value & "," ' 20872
+    code = code & "~fldek98uEt3fRtVFB~:" & CStr(values.Cells.Item(1, 34).value + values.Cells.Item(1, 48).value) & "," ' 20874
+    code = code & "~fld44lsv8AiFc4QBS~:" & CStr(values.Cells.Item(1, 35).value + values.Cells.Item(1, 39).value + values.Cells.Item(1, 64).value) & "," ' 20878
+    code = code & "~fldwLEP4cGXRkq5fF~:" & CStr(values.Cells.Item(1, 36).value + values.Cells.Item(1, 73).value) & "," ' 20855
+    code = code & "~fldJPmTwLQKDqfS43~:" & values.Cells.Item(1, 37).value & "," ' 20842
+    code = code & "~fldcH1FBIC1Lkiucj~:" & CStr(values.Cells.Item(1, 38).value + values.Cells.Item(1, 56).value) & "," ' 20877
+    code = code & "~fldoUp3DN1OrlNHPc~:" & CStr(values.Cells.Item(1, 40).value + values.Cells.Item(1, 54).value + values.Cells.Item(1, 57).value) & "," ' 20879
+    code = code & "~fldAtzhUJvAQJp52C~:" & CStr(values.Cells.Item(1, 41).value + values.Cells.Item(1, 55).value) & "," ' 20882
+    code = code & "~fldVrhadLAOZ3fGjl~:" & values.Cells.Item(1, 42).value & "," ' 20883
+    code = code & "~fldIxjDIwL3Bzs5Ry~:" & values.Cells.Item(1, 43).value & "," ' 20884
+    code = code & "~fldCkjplaeiCBw00x~:" & values.Cells.Item(1, 44).value & "," ' 20885
+    code = code & "~fldghnEZa164OZoHz~:" & CStr(values.Cells.Item(1, 45).value + values.Cells.Item(1, 58).value) & "," ' 20886
+    code = code & "~fldNKhOatNdhSvPB8~:" & values.Cells.Item(1, 46).value & "," ' 20898
+    code = code & "~fldoWTbjdJbdlneKH~:" & values.Cells.Item(1, 47).value & "," ' 20896
+    code = code & "~fldFsibkSfEfBGSPF~:" & values.Cells.Item(1, 49).value & "," ' 20875
+    code = code & "~fld6fPFVG2q7ZzJIS~:" & values.Cells.Item(1, 50).value & "," ' 20876
+    code = code & "~fldQyrc8n6uAFgorC~:" & values.Cells.Item(1, 51).value & "," ' 20812
+    code = code & "~fldZDmMsh1tNRaE22~:" & values.Cells.Item(1, 52).value & "," ' 20891
+    code = code & "~fldR7VAPIb0lZOY29~:" & values.Cells.Item(1, 53).value & "," ' 20895
+    code = code & "~fldaf03OtbtUO2fBu~:" & values.Cells.Item(1, 59).value & "," ' 20830
+    code = code & "~fldVoVP2558sITlV7~:" & values.Cells.Item(1, 60).value & "," ' 20832
+    code = code & "~fldttgF9jaOLk8ZWS~:" & values.Cells.Item(1, 61).value & "," ' 20837
+    code = code & "~flddvRfAeEsub9kkm~:" & CStr(values.Cells.Item(1, 62).value + values.Cells.Item(1, 72).value) & "," ' 20854
+    code = code & "~fldY7ncvU7PPRn6dF~:" & CStr(values.Cells.Item(1, 63).value + values.Cells.Item(1, 74).value) & "," ' 20859
+    code = code & "~fldSLbAhgEfm4vRjG~:" & values.Cells.Item(1, 65).value & "," ' 20847
+    code = code & "~fldRy9UZIAtbbnHZ7~:" & values.Cells.Item(1, 66).value & "," ' 20848
+    code = code & "~fldL4GpJtR7LDvQ29~:" & values.Cells.Item(1, 67).value & "," ' 20849
+    code = code & "~fldmBpZ0g1YHwjjmX~:" & values.Cells.Item(1, 68).value & "," ' 20850
+    code = code & "~fldEmhjUa2Rx3SmJk~:" & values.Cells.Item(1, 69).value & "," ' 20851
+    code = code & "~fld8SWLCz37Det9Xx~:" & values.Cells.Item(1, 71).value & "," ' 20853
+    code = code & "~fldpbad3Bj3DU5DM6~:" & values.Cells.Item(1, 75).value & "," ' 20860
+    code = code & "~fldfofta2nXopQhod~:" & values.Cells.Item(1, 76).value & "," ' 20868
+    code = code & "~fldClV99fdJHk3r6U~:" & CStr(values.Cells.Item(1, 77).value + values.Cells.Item(1, 89).value) & "," ' 20912
+    code = code & "~fldSrvvy10dyhmBAT~:" & CStr(values.Cells.Item(1, 78).value + values.Cells.Item(1, 90).value) & "," ' 20913
+    code = code & "~fldi7OqjtLmPWtLBA~:" & values.Cells.Item(1, 79).value & "," ' 20901
+    code = code & "~fldGUwivS5boQYhDx~:" & CStr(values.Cells.Item(1, 80).value + values.Cells.Item(1, 96).value) & "," ' 20902
+    code = code & "~fldphb40F2g1zPcvD~:" & values.Cells.Item(1, 81).value & "," ' 20903
+    code = code & "~fldW5jHtEnBniaEfs~:" & values.Cells.Item(1, 85).value & "," ' 20907
+    code = code & "~fld7P3tA3ZXqR3wyg~:" & values.Cells.Item(1, 86).value & "," ' 20908
+    code = code & "~fldK5qGz7cnTvTTNr~:" & values.Cells.Item(1, 87).value & "," ' 20910
+    code = code & "~fldBi9W3Y5rFhxgNn~:" & values.Cells.Item(1, 88).value & "," ' 20911
+    code = code & "~fldhAm6nYXCUg2J1E~:" & CStr(values.Cells.Item(1, 92).value + values.Cells.Item(1, 97).value) & "," ' 20915
+    code = code & "~fldHW4QssP8reBkCv~:" & values.Cells.Item(1, 94).value & "," ' 20918
+    code = code & "~fldtnuoFOAbu2Kc0V~:" & values.Cells.Item(1, 95).value ' 20880
     
     code = code & "}}')"
     
@@ -627,7 +698,7 @@ Public Sub CopyAndOpenCountyTotalsSite()
             .setData "text", code
         End With
     End With
-    ThisWorkbook.FollowHyperlink address:="https://airtable.com/appSbQN8aFnRtJgDl/paghjbBNBGqpEbTLu/form"
+    ThisWorkbook.FollowHyperlink address:="https://airtable.com/appSihm9stog1ZEFn/paglEufgcXNk939cP/form"
 End Sub
 
 ' This macro subroutine may be used to double-check
